@@ -5,17 +5,25 @@ window.addEventListener("DOMContentLoaded", start);
 let jsonData;
 const settings = {};
 const logData = [];
+const HTML = {};
 
 function start() {
+  document.querySelector("#valcard").addEventListener("click", cardnumberValidate);
   initSettings();
+  initHTMLpointers();
   settings.interval = 2000;
   timerFunction();
+  post();
 }
 
 function initSettings() {
   settings.endpointOrder = "https://holbech-bestbrewer.herokuapp.com/order/";
   settings.endpoint = "https://holbech-bestbrewer.herokuapp.com/";
   /* settings.apiKey = "6ea32456-cebd-427c-abc2-c0224c9a2bc0"; */
+}
+
+function initHTMLpointers() {
+  HTML.form = document.querySelector("form");
 }
 
 async function getData() {
@@ -51,47 +59,26 @@ async function post() {
   /* getJsonData(); */
 }
 
-async function deleteIt(id) {
-  /* const id = jsonData[jsonData.length - 1]._id; */
-  const response = await fetch(settings.endpoint + "/" + id, {
-    method: "delete",
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "x-apikey": settings.apiKey,
-      "cache-control": "no-cache",
-    },
-  });
-  /* .then((e) => e.json())
-        .then((e) => console.log(e)); */
-  jsonData = await response.json();
-  console.log(jsonData);
+function cardnumberValidate() {
+  let valid = require("card-validator");
+  console.log(HTML.form.cardnumber.value);
+  let numberValidation = valid.number(HTML.form.cardnumber.value);
+  /*  //This works on active credit cards, and i won't use my own creditcard number online :S
+   if (!numberValidation.isValid) {
+    console.log("invalid cardnumber");
+  } */
+  if (!numberValidation.isPotentiallyValid) {
+    console.log("invalid cardnumber");
+  } else {
+    console.log("Card number is correct");
+    console.log(numberValidation.card.type);
+    console.log(numberValidation.card.gaps);
+    console.log("antal kontrolcifre", numberValidation.card.code.size);
+    HTML.form.cardnumber.pattern = numberValidation.card.gaps;
+  }
 }
 
-async function put(id) {
-  /* const id = jsonData[jsonData.length - 1]._id; */
-  let data = {
-    brand: "Volkswagen",
-    serial_number: "vw" + Math.random(),
-    model: "Up!",
-    engine_size_l: "1.0",
-  };
-  let postData = JSON.stringify(data);
-  const response = await fetch(settings.endpoint + "/" + id, {
-    method: "put",
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "x-apikey": settings.apiKey,
-      "cache-control": "no-cache",
-    },
-    body: postData,
-  });
-  /* .then((e) => e.json())
-          .then((e) => console.log(e)); */
-  const putData = await response.json();
-  console.log(putData);
-}
-
-function addCard() {
+/* function addCard() {
   HTML.form.title.classList.remove("invalid");
   const formIsValid = HTML.form.checkValidity();
   if (formIsValid) {
@@ -113,4 +100,4 @@ function createCardFromInput() {
     priority: HTML.form.priority.value,
   };
   return card;
-}
+} */

@@ -7,6 +7,16 @@
     <link rel="stylesheet" href="orderform.css" />
   </head>
   <body>
+    <form action="" onsubmit="return false;" autocomplete="off">
+      <h2>Sign up to our service</h2>
+      <div class="form-group">
+        <label for="cardnumber">Kortnummer</label>
+        <!-- <span id="hint-mail">This field require at least an @-sign</span> -->
+        <input id="cardnumber" name="cardnumber" type="number" value="4571397012345678" aria-describedby="hint-mail" autocomplete="current-password" required />
+        <!-- <span class="error" id="err-mail" aria-live="assertive">Type in your email address</span> -->
+      </div>
+    </form>
+    <button id="valcard">Validate Cardnumber</button>
     <script src="orderform.js"></script>
   </body>
 </html>
