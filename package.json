@@ -1,0 +1,29 @@
+{
+  "name": "beer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dashboard.js",
+  "scripts": {
+    "start": "parcel orderform.html --open",
+    "build": "parcel build *.html --public-url ./"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.9.6",
+    "card-validator": "^6.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/plugin-transform-runtime": "^7.9.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jona74c2/beer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jona74c2/beer/issues"
+  },
+  "homepage": "https://github.com/jona74c2/beer#readme"
+}
