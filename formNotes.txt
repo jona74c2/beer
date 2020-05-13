@@ -1,0 +1,5 @@
+Funktionalitet:
+Mangler
+Cap på indtastning af tal
+Whitespaces i kortnummer ud fra korttypen
+

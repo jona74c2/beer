@@ -1,0 +1,59 @@
+/* https://slides.com/dannievinther/styling-forms/#/16 */
+
+.form-group {
+  display: grid;
+}
+
+#creditcardform input {
+  border: none;
+  background-color: #c0dbc7;
+  padding: 6px;
+  padding-top: 8px;
+  padding-left: 10px;
+  margin-bottom: 3px;
+  font-size: 16px;
+  -webkit-box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.41);
+  -moz-box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.41);
+  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.41);
+}
+
+#creditcardform #dateform-group {
+  display: flex;
+}
+
+#creditcardform .datesingle-form {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+label {
+  margin-top: 10px;
+}
+
+#creditcardform input:focus {
+  background-color: #88e0a1;
+  outline: none;
+}
+/* Input spinners removed. This code is taken from: https://css-tricks.com/snippets/css/turn-off-number-input-spinners/ */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+#creditcardform input:invalid:not(:placeholder-shown):not(:focus) + .error {
+  max-height: 2rem;
+}
+
+/* transition example taken from KEA slides: https://slides.com/dannievinther/styling-forms/#/16 */
+.error {
+  color: crimson;
+  max-height: 0;
+  overflow: hidden;
+  transition: 0.3s max-height;
+}
+
+input::-webkit-input-placeholder {
+  opacity: 0;
+}

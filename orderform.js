@@ -4,7 +4,7 @@ window.addEventListener("DOMContentLoaded", start);
 
 let jsonData;
 const settings = {};
-const logData = [];
+//const logData = [];
 const HTML = {};
 
 function start() {
@@ -12,14 +12,15 @@ function start() {
   initSettings();
   initHTMLpointers();
   settings.interval = 2000;
-  timerFunction();
+  //timerFunction();
   post();
+  getDate();
+  initDateForm();
 }
 
 function initSettings() {
   settings.endpointOrder = "https://holbech-bestbrewer.herokuapp.com/order/";
   settings.endpoint = "https://holbech-bestbrewer.herokuapp.com/";
-  /* settings.apiKey = "6ea32456-cebd-427c-abc2-c0224c9a2bc0"; */
 }
 
 function initHTMLpointers() {
@@ -60,8 +61,8 @@ async function post() {
 }
 
 function cardnumberValidate() {
+  //API: https://www.npmjs.com/package/card-validator
   let valid = require("card-validator");
-  console.log(HTML.form.cardnumber.value);
   let numberValidation = valid.number(HTML.form.cardnumber.value);
   /*  //This works on active credit cards, and i won't use my own creditcard number online :S
    if (!numberValidation.isValid) {
@@ -70,12 +71,38 @@ function cardnumberValidate() {
   if (!numberValidation.isPotentiallyValid) {
     console.log("invalid cardnumber");
   } else {
-    console.log("Card number is correct");
     console.log(numberValidation.card.type);
     console.log(numberValidation.card.gaps);
-    console.log("antal kontrolcifre", numberValidation.card.code.size);
-    HTML.form.cardnumber.pattern = numberValidation.card.gaps;
+    let maxnumber = 9;
+    let minnumber = 1;
+    for (let i = 0; i < numberValidation.card.code.size; i++) {
+      if (i !== 0) {
+        minnumber += "0";
+        maxnumber += "9";
+      }
+    }
+
+    HTML.form.controlnumber.max = maxnumber;
+    HTML.form.controlnumber.min = minnumber;
+    console.log("kontrol ciffer antal: ", HTML.form.controlnumber.max);
+    //HTML.form.cardnumber.pattern = numberValidation.card.gaps;
   }
+}
+
+function getDate() {
+  // example used to build this function: https://www.geeksforgeeks.org/how-to-convert-milliseconds-to-date-in-javascript/
+  let dateInMs = new Date().getTime();
+  let date = new Date(dateInMs);
+  if (date.getMonth() < 10) {
+    settings.month = "0" + (date.getMonth() + 1);
+  }
+  settings.year = date.getFullYear().toString().substring(2, 4);
+}
+
+function initDateForm() {
+  HTML.form.cardmonth.value = settings.month;
+  HTML.form.cardyear.value = settings.year;
+  HTML.form.cardyear.min = settings.year;
 }
 
 /* function addCard() {

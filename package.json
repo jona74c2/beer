@@ -1,7 +1,7 @@
 {
   "name": "beer",
   "version": "1.0.0",
-  "description": "",
+  "description": "Examproject at KEA",
   "main": "dashboard.js",
   "scripts": {
     "start": "parcel orderform.html --open",

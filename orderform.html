@@ -7,13 +7,36 @@
     <link rel="stylesheet" href="orderform.css" />
   </head>
   <body>
-    <form action="" onsubmit="return false;" autocomplete="off">
+    <form id="creditcardform" action="" onsubmit="return false;" autocomplete="off">
       <h2>Sign up to our service</h2>
       <div class="form-group">
         <label for="cardnumber">Kortnummer</label>
         <!-- <span id="hint-mail">This field require at least an @-sign</span> -->
-        <input id="cardnumber" name="cardnumber" type="number" value="4571397012345678" aria-describedby="hint-mail" autocomplete="current-password" required />
-        <!-- <span class="error" id="err-mail" aria-live="assertive">Type in your email address</span> -->
+        <input id="cardnumber" name="cardnumber" type="number" placeholder="&nbsp;" value="4571397012345678" required />
+        <span class="error" id="err-mail" aria-live="assertive">Type in your email address</span>
+      </div>
+
+      <div class="form-group">
+        <label for="cardmonth">Udløbsdato</label>
+        <div id="dateform-group">
+          <!-- <span id="hint-mail">This field require at least an @-sign</span> -->
+          <div class="datesingle-form">
+            <input id="cardmonth" name="cardmonth" min="1" max="12" type="number" placeholder="&nbsp;" required />
+            <span class="error" id="err-mail" aria-live="assertive">Type in your email address</span>
+          </div>
+          <!-- <span id="hint-mail">This field require at least an @-sign</span> -->
+          <div class="datesingle-form">
+            <input id="cardyear" name="cardyear" max="99" type="number" placeholder="&nbsp;" required />
+            <span class="error" id="err-mail" aria-live="assertive">Type in your email address</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="controlnumber">Kontrolnummer</label>
+        <!-- <span id="hint-mail">This field require at least an @-sign</span> -->
+        <input id="controlnumber" name="controlnumber" type="number" placeholder="&nbsp;" required />
+        <span class="error" id="err-mail" aria-live="assertive">Type in your email address</span>
       </div>
     </form>
     <button id="valcard">Validate Cardnumber</button>
