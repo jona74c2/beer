@@ -13,7 +13,7 @@
         <div class="form-group">
           <label for="cardnumber">Kortnummer</label>
           <!-- <span id="hint-mail">This field require at least an @-sign</span> -->
-          <input id="cardnumber" name="cardnumber" type="text" placeholder="&nbsp;" value="4571397012345678" required />
+          <input id="cardnumber" name="cardnumber" type="text" placeholder="&nbsp;" inputmode="numeric" value="4571397012345678" required />
           <span class="error" id="err-mail" aria-live="assertive">Indtast dit kortnummer</span>
         </div>
 
@@ -37,7 +37,7 @@
             <div id="controlnumber_container" class="datesingle-form">
               <label for="controlnumber">Kontrolnummer</label>
               <!-- <span id="hint-mail">This field require at least an @-sign</span> -->
-              <input id="controlnumber" name="controlnumber" pattern="[0-9]{1}" type="number" placeholder="&nbsp;" required />
+              <input id="controlnumber" name="controlnumber" type="text" inputmode="numeric" pattern="[0-9]{3,}" placeholder="&nbsp;" required />
               <span class="error" id="err-mail" aria-live="assertive">Indtast <span id="controlnumberdigits"></span> kontrolcifre</span>
             </div>
           </div>

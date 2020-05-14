@@ -22,10 +22,12 @@ function initObejcts() {
 }
 
 function initForm() {
+  initMasks();
   cardnumberValidate();
   getDate();
   initDateForm();
-  cardnumberMask("0000 0000 0000 0000", [19]);
+
+  //cardnumberMask("0000 0000 0000 0000000", [19]);
   HTML.form.cardnumber.addEventListener("input", cardnumberValidate);
 }
 
@@ -38,6 +40,23 @@ function initSettings() {
 
 function initHTMLpointers() {
   HTML.form = document.querySelector("form");
+}
+
+function initMasks() {
+  initCodenumberMask();
+  initCardnumberMask();
+}
+
+function initCodenumberMask() {
+  settings.maskControlnumber = IMask(HTML.form.controlnumber, {
+    mask: "000",
+  });
+}
+
+function initCardnumberMask() {
+  settings.maskCardnumber = IMask(HTML.form.cardnumber, {
+    mask: "0000 0000 0000 0000000",
+  });
 }
 
 async function getData() {
@@ -76,7 +95,8 @@ async function post() {
 function cardnumberValidate() {
   //API: https://www.npmjs.com/package/card-validator
   console.log("Cardnumber Validation initiated");
-  if (HTML.form.cardnumber.value === "") {
+  console.log(HTML.form.cardnumber.value.length);
+  if (HTML.form.cardnumber.value.length < 4) {
     console.log("Cardnumber Validation terminated");
     return;
   }
@@ -89,39 +109,23 @@ function cardnumberValidate() {
   if (!numberValidation.isPotentiallyValid) {
     console.log("invalid cardnumber");
   } else {
-    console.log(numberValidation.card.type);
+    if (numberValidation.card.type != null) {
+      console.log(numberValidation.card.type);
 
-    setCardnumberMask(numberValidation.card.lengths, numberValidation.card.gaps);
+      setCardnumberMask(numberValidation.card.lengths, numberValidation.card.gaps);
 
-    let minmax = getControlnumberMinMax(numberValidation);
-    setControlnumberMinMax(minmax);
-  }
-}
-
-function getControlnumberMinMax(numberValidation) {
-  let maxnumber = 9;
-  let minnumber = 0;
-
-  for (let i = 0; i < numberValidation.card.code.size; i++) {
-    if (i !== 0) {
-      minnumber += "0";
-      maxnumber += "9";
+      setControlnumberMask(numberValidation.card.code.size);
+      console.log("numberValidation.card.code.size: ", numberValidation.card.code.size);
     }
   }
-  return { minnumber, maxnumber, numberValidation };
 }
 
-function setControlnumberMinMax(minmax) {
-  HTML.form.controlnumber.max = minmax.maxnumber;
-  //HTML.form.controlnumber.min = minmax.minnumber;
-  HTML.form.querySelector("#controlnumberdigits").textContent = minmax.numberValidation.card.code.size;
+function setControlnumberMask(codeSize) {
+  HTML.form.querySelector("#controlnumberdigits").textContent = codeSize;
   console.log("kontrol ciffer antal: ", HTML.form.controlnumber.max);
+  HTML.form.controlnumber.pattern = `[0-9]{${codeSize}}`;
   const nine = "0";
-  IMask(HTML.form.controlnumber, {
-    mask: nine.repeat(minmax.numberValidation.card.code.size),
-    /*     min: minmax.minnumber,
-    max: minmax.maxnumber, */
-  });
+  settings.maskControlnumber.updateOptions({ mask: nine.repeat(codeSize) });
 }
 
 function setCardnumberMask(lengths, gaps) {
@@ -138,13 +142,15 @@ function setCardnumberMask(lengths, gaps) {
 
 function cardnumberMask(patternMask, lengths) {
   /*  if (settings.cardnumberMaskBool) { */
-  let mask;
   const nine = "9";
-  mask = IMask(HTML.form.cardnumber, {
-    mask: patternMask,
-    max: nine.repeat(lengths[lengths.length - 1]),
-  });
-  mask.updateValue(); /* else {
+  const one = "1";
+  const zero = "0";
+  let max = nine.repeat(lengths[lengths.length - 1]);
+  let min = one + zero.repeat(lengths[lengths.length - 1] - 1);
+
+  HTML.form.cardnumber.minLength = lengths[0];
+
+  settings.maskCardnumber.updateOptions({ mask: patternMask, max: max }); /* else {
     settings.mask.updateValue((mask = patternMask));
   } */
   /*  settings.cardnumberMaskBool = false; */

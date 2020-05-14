@@ -14,6 +14,17 @@ Flere kortlængder i HTML, såsom visa: [16, 18, 19]
 fix korrekt måned 001
 
 
+Text i feltet number giver dårlig brugervenlighed, da den viser bogstaver og tal på tastaturet
+Input skal være tekst for at jeg kan indsætte mellemrum
+
+Den beder om en updateValue, men jeg kan ikke lige forstå det
+
+Den overskriver 3-4 tal i inputfeltet, på trods af at masken er okay
+
+
+
+
+
 --------------------
 
 Andre betalingsmuligheder?
