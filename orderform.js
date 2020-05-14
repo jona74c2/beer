@@ -1,5 +1,5 @@
 "use strict";
-
+import IMask from "imask";
 window.addEventListener("DOMContentLoaded", start);
 
 let jsonData;
@@ -8,19 +8,32 @@ const settings = {};
 const HTML = {};
 
 function start() {
-  document.querySelector("#valcard").addEventListener("click", cardnumberValidate);
-  initSettings();
-  initHTMLpointers();
-  settings.interval = 2000;
+  //document.querySelector("#order").addEventListener("click", cardnumberValidate);
+  initObejcts();
+  initForm();
+
   //timerFunction();
   post();
+}
+
+function initObejcts() {
+  initSettings();
+  initHTMLpointers();
+}
+
+function initForm() {
+  cardnumberValidate();
   getDate();
   initDateForm();
+  cardnumberMask("0000 0000 0000 0000", [19]);
+  HTML.form.cardnumber.addEventListener("input", cardnumberValidate);
 }
 
 function initSettings() {
   settings.endpointOrder = "https://holbech-bestbrewer.herokuapp.com/order/";
   settings.endpoint = "https://holbech-bestbrewer.herokuapp.com/";
+  settings.interval = 2000;
+  settings.cardnumberMaskBool = true;
 }
 
 function initHTMLpointers() {
@@ -62,6 +75,11 @@ async function post() {
 
 function cardnumberValidate() {
   //API: https://www.npmjs.com/package/card-validator
+  console.log("Cardnumber Validation initiated");
+  if (HTML.form.cardnumber.value === "") {
+    console.log("Cardnumber Validation terminated");
+    return;
+  }
   let valid = require("card-validator");
   let numberValidation = valid.number(HTML.form.cardnumber.value);
   /*  //This works on active credit cards, and i won't use my own creditcard number online :S
@@ -72,21 +90,83 @@ function cardnumberValidate() {
     console.log("invalid cardnumber");
   } else {
     console.log(numberValidation.card.type);
-    console.log(numberValidation.card.gaps);
-    let maxnumber = 9;
-    let minnumber = 1;
-    for (let i = 0; i < numberValidation.card.code.size; i++) {
-      if (i !== 0) {
-        minnumber += "0";
-        maxnumber += "9";
-      }
-    }
 
-    HTML.form.controlnumber.max = maxnumber;
-    HTML.form.controlnumber.min = minnumber;
-    console.log("kontrol ciffer antal: ", HTML.form.controlnumber.max);
-    //HTML.form.cardnumber.pattern = numberValidation.card.gaps;
+    setCardnumberMask(numberValidation.card.lengths, numberValidation.card.gaps);
+
+    let minmax = getControlnumberMinMax(numberValidation);
+    setControlnumberMinMax(minmax);
   }
+}
+
+function getControlnumberMinMax(numberValidation) {
+  let maxnumber = 9;
+  let minnumber = 0;
+
+  for (let i = 0; i < numberValidation.card.code.size; i++) {
+    if (i !== 0) {
+      minnumber += "0";
+      maxnumber += "9";
+    }
+  }
+  return { minnumber, maxnumber, numberValidation };
+}
+
+function setControlnumberMinMax(minmax) {
+  HTML.form.controlnumber.max = minmax.maxnumber;
+  //HTML.form.controlnumber.min = minmax.minnumber;
+  HTML.form.querySelector("#controlnumberdigits").textContent = minmax.numberValidation.card.code.size;
+  console.log("kontrol ciffer antal: ", HTML.form.controlnumber.max);
+  const nine = "0";
+  IMask(HTML.form.controlnumber, {
+    mask: nine.repeat(minmax.numberValidation.card.code.size),
+    /*     min: minmax.minnumber,
+    max: minmax.maxnumber, */
+  });
+}
+
+function setCardnumberMask(lengths, gaps) {
+  if (JSON.stringify(gaps) !== JSON.stringify(settings.prevGaps)) {
+    const patternMask = getCardNumberPattern(lengths, gaps);
+
+    console.log(patternMask);
+    cardnumberMask(patternMask, lengths);
+    //mask.updateValue();
+  } else {
+    console.log("no update in gaps");
+  }
+}
+
+function cardnumberMask(patternMask, lengths) {
+  /*  if (settings.cardnumberMaskBool) { */
+  let mask;
+  const nine = "9";
+  mask = IMask(HTML.form.cardnumber, {
+    mask: patternMask,
+    max: nine.repeat(lengths[lengths.length - 1]),
+  });
+  mask.updateValue(); /* else {
+    settings.mask.updateValue((mask = patternMask));
+  } */
+  /*  settings.cardnumberMaskBool = false; */
+  /* } */
+}
+
+function getCardNumberPattern(lengths, gaps) {
+  let patternMask = "0";
+  let l = 0;
+  const cardlength = lengths[lengths.length - 1];
+  if (JSON.stringify(gaps) !== JSON.stringify(settings.prevGaps)) {
+    for (let i = 0; i < cardlength; i++) {
+      if (i === gaps[l] - 1) {
+        patternMask += " ";
+        l++;
+      }
+      patternMask += 0;
+    }
+    settings.prevGaps = gaps;
+    console.log("Prev gaps: ", settings.prevGaps, " new gaps: ", gaps);
+  }
+  return patternMask;
 }
 
 function getDate() {
@@ -103,6 +183,14 @@ function initDateForm() {
   HTML.form.cardmonth.value = settings.month;
   HTML.form.cardyear.value = settings.year;
   HTML.form.cardyear.min = settings.year;
+  maksDateForm(HTML.form.cardyear);
+  maksDateForm(HTML.form.cardmonth);
+}
+
+function maksDateForm(dateForm) {
+  IMask(dateForm, {
+    mask: "00",
+  });
 }
 
 /* function addCard() {

@@ -1,5 +1,20 @@
 Funktionalitet:
 Mangler
+
 Cap på indtastning af tal
+
 Whitespaces i kortnummer ud fra korttypen
 
+Opret kontrolnummerfelt der passer til google autofill
+
+Google autofill anvender formatet 2024 for årstal og ikke 24
+
+Flere kortlængder i HTML, såsom visa: [16, 18, 19]
+
+fix korrekt måned 001
+
+
+--------------------
+
+Andre betalingsmuligheder?
+Betal ved afhentning
