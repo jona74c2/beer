@@ -1,0 +1,22 @@
+body {
+  width: 15%;
+}
+
+[data-name="Layer 1"] > path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: dash 2s linear alternate forwards;
+}
+
+@keyframes dash {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+img {
+  width: 20%;
+}
