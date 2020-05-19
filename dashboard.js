@@ -34,54 +34,64 @@ function builder(orderData) {
     console.log("Return return");
     return;
   }
-  let orderDataArray = [];
+  let orderDataObject = getOrders(orderData);
+
+  if (orderDataObject.everyNewOrder !== undefined) {
+    countBeer(orderDataObject.everyNewOrder);
+    console.log("We are in!");
+  }
+  updateUIQueue(orderDataObject.newQueueOrders);
+}
+
+function getOrders(orderData) {
+  let orderDataObject;
   if (settings.firstBuild) {
     initBeerCount(orderData);
-    orderDataArray = initOrderData(orderData);
+    orderDataObject = initOrderData(orderData);
     settings.firstBuild = false;
   } else {
-    orderDataArray = updateOrderData(orderData);
-    console.log("orderDataArray: ", orderDataArray);
+    orderDataObject = updateOrderData(orderData);
+    console.log("orderDataObject: ", orderDataObject.everyNewOrder);
   }
-  if (orderDataArray.length > 0) {
-    countBeer(orderDataArray);
-    console.log("We are in!");
-  } else {
-    console.log("no updates");
-  }
+  return orderDataObject;
 }
 
 function updateOrderData(orderData) {
-  let subArray = [];
+  let everyNewOrder = [];
+  let newQueueOrders = [];
   if (orderData.serving === undefined) {
-    return subArray;
+    return { everyNewOrder, newQueueOrders };
   }
-
   console.log("lastArrayItem: ", beerCount.lastArrayItem);
   beerCount.foundLastArrayItem = false;
 
-  subArray = addNewOrders(orderData.serving).concat(addNewOrders(orderData.queue));
-  /* let temp = addNewOrders(orderData.queue);
-  subArray = subArray.concat(temp); */
+  newQueueOrders = addNewOrders(orderData.queue);
+  everyNewOrder = addNewOrders(orderData.serving).concat(newQueueOrders);
+  setLastArrayItem(orderData);
+
+  if (!beerCount.foundLastArrayItem) {
+    everyNewOrder = orderData.serving.concat(orderData.queue);
+    newQueueOrders = orderData.queue;
+    return { newQueueOrders, newQueueOrders };
+  }
+  return { everyNewOrder, newQueueOrders };
+}
+
+function setLastArrayItem(orderData) {
   if (orderData.serving === undefined) {
+    beerCount.lastArrayItem = -1;
+    beerCount.lastArrayItem.id = -1;
+  } else if (orderData.queue === undefined) {
     beerCount.lastArrayItem = orderData.serving[orderData.serving.length - 1];
   } else {
     beerCount.lastArrayItem = orderData.queue[orderData.queue.length - 1];
   }
-
-  if (!beerCount.foundLastArrayItem) {
-    return orderData.serving.concat(orderData.queue);
-  }
-  return subArray;
 }
-
 function addNewOrders(array) {
   let subArray2 = [];
   array.forEach((order) => {
-    console.log("order: ", order);
     if (beerCount.foundLastArrayItem) {
       subArray2.push(order);
-      console.log("item pushed pushed");
     } else if (beerCount.lastArrayItem !== undefined && order.id === beerCount.lastArrayItem.id) {
       beerCount.foundLastArrayItem = true;
       console.log("item found!", order.id, " ", beerCount.lastArrayItem.id);
@@ -91,12 +101,12 @@ function addNewOrders(array) {
 }
 
 function initOrderData(orderData) {
-  console.log(orderData);
-  orderData = orderData.serving.concat(orderData.queue);
+  let everyNewOrder = orderData.serving.concat(orderData.queue);
   if (orderData.queue !== undefined) {
     beerCount.lastArrayItem = orderData.queue[orderData.queue.length - 1];
   }
-  return orderData;
+  let newQueueOrders = [...everyNewOrder];
+  return { everyNewOrder, newQueueOrders };
 }
 
 function initBeerCount(orderData) {
@@ -104,7 +114,6 @@ function initBeerCount(orderData) {
     beerCount["beerTap" + index] = tap.beer;
     beerCount["ordersTap" + index] = 0;
   });
-  console.group(beerCount);
 }
 
 function countBeer(orderData) {
@@ -120,6 +129,47 @@ function countBeer(orderData) {
     });
   });
   console.log(beerCount);
+  rankBeer();
+}
+
+function rankBeer() {
+  let beerArray = beerCountObjectToArray();
+  beerArray = beerArray.sort(compare);
+  beerArray.forEach((ele, index) => {
+    //look for empty elements in the array and remove them
+    if (ele.length === 0) {
+      beerArray.splice(index, 1);
+    }
+  });
+  console.log(beerArray);
+}
+
+function compare(a, b) {
+  if (a[0] > b[0]) return -1;
+  if (b[0] > a[0]) return 1;
+  //remove dublicates - needed because of risk of one beer on multiple taps blocking out another
+  //empty the array if the number of orders and beernames is the same
+  else if (a[1] === b[1]) {
+    b.pop();
+    b.pop();
+  }
+  return 0;
+}
+
+function beerCountObjectToArray() {
+  let beerArray = [];
+  for (let i = 0; i < 7; i++) {
+    beerArray[i] = new Array(2);
+    beerArray[i][0] = beerCount["ordersTap" + i];
+    beerArray[i][1] = beerCount["beerTap" + i];
+  }
+  return beerArray;
+}
+
+function updateUIQueue(newQueueOrders) {
+  if (newQueueOrders.length > 0) {
+    console.log("new orders in queue: ", newQueueOrders);
+  }
 }
 
 /* function setLogData() {
