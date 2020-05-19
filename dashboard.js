@@ -8,6 +8,7 @@ const beerCount = {};
 function start() {
   settings.firstBuild = true;
   settings.interval = 2000;
+  settings.queue = -1;
   timerFunction();
 }
 
@@ -41,6 +42,13 @@ function builder(orderData) {
     console.log("We are in!");
   }
   updateUIQueue(orderDataObject.newQueueOrders);
+  if (settings.queue === -1) {
+    console.log("! -1 init val");
+  } else {
+    removeFromUIQueue(settings.queue - orderData.queue.length + orderDataObject.newQueueOrders.length);
+  }
+
+  settings.queue = orderData.queue.length;
 }
 
 function getOrders(orderData) {
@@ -134,25 +142,24 @@ function countBeer(orderData) {
 
 function rankBeer() {
   let beerArray = beerCountObjectToArray();
+  //sort the array in order of most sold beers
   beerArray = beerArray.sort(compare);
+  let prev;
   beerArray.forEach((ele, index) => {
-    //look for empty elements in the array and remove them
-    if (ele.length === 0) {
+    //remove dublicates - needed because of risk of one beer on multiple taps blocking out another
+    //check for identical neighbors, because two same beers will always have the same amount of sales
+    //remove identical
+    if (ele[1] === prev) {
       beerArray.splice(index, 1);
     }
+    prev = ele[1];
   });
-  console.log(beerArray);
+  updateUIRank(beerArray);
 }
 
 function compare(a, b) {
   if (a[0] > b[0]) return -1;
   if (b[0] > a[0]) return 1;
-  //remove dublicates - needed because of risk of one beer on multiple taps blocking out another
-  //empty the array if the number of orders and beernames is the same
-  else if (a[1] === b[1]) {
-    b.pop();
-    b.pop();
-  }
   return 0;
 }
 
@@ -167,9 +174,19 @@ function beerCountObjectToArray() {
 }
 
 function updateUIQueue(newQueueOrders) {
-  if (newQueueOrders.length > 0) {
-    console.log("new orders in queue: ", newQueueOrders);
+  if (newQueueOrders !== undefined) {
+    if (newQueueOrders.length > 0) {
+      console.log("new orders in queue: ", newQueueOrders);
+    }
   }
+}
+
+function removeFromUIQueue(number) {
+  console.log("remove from queue: ", number);
+}
+
+function updateUIRank(beerArray) {
+  console.log(beerArray);
 }
 
 /* function setLogData() {
