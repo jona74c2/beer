@@ -1,5 +1,94 @@
+:root {
+  --moveup-number: 1;
+}
+
 body {
-  width: 15%;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+}
+
+#ranking {
+  padding: 40px;
+}
+
+#ranking img {
+  width: 20%;
+}
+
+#blackboard {
+  border-radius: 50px;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 40px;
+  padding-top: 80px;
+  background-image: url("./static/dashboard/img/blackboard.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+}
+
+#blackboard article {
+  margin: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+
+#blackboard_line {
+  width: 3px;
+  background-color: white;
+  height: 600px;
+  margin-right: 10%;
+  margin-left: 5%;
+}
+
+#blackboard span {
+  font-size: 26px;
+  color: white;
+  margin-right: 20px;
+}
+
+svg {
+  width: 50%;
+}
+
+.insert {
+  animation: insert 1s cubic-bezier(0.17, 0.67, 0.05, 1.15) forwards;
+}
+
+@keyframes insert {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}
+
+.remove {
+  animation: remove 1s cubic-bezier(0.52, -0.12, 0.93, 0.3) forwards;
+}
+
+@keyframes remove {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(150%);
+  }
+}
+
+.moveup {
+  animation: moveup 0.5s ease-in-out forwards;
+}
+
+@keyframes moveup {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateY(calc((-100% - 10px) * var(--moveup-number)));
+  }
 }
 
 [data-name="Layer 1"] > path {
@@ -18,5 +107,5 @@ body {
 }
 
 img {
-  width: 20%;
+  width: 100%;
 }

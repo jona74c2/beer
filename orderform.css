@@ -74,7 +74,7 @@ input:invalid:not(:placeholder-shown):not(:focus) {
   background-position: right 10px center;
   background-size: 16px 16px;
   background-repeat: no-repeat;
-  background-image: url(static/img/erroricon.svg);
+  background-image: url("./static/orderform/img/erroricon.svg");
 
   /* animation: shake .125s 2 backwards; */
 }
@@ -83,7 +83,7 @@ input:valid:not(:placeholder-shown):not(:focus) {
   background-position: right 10px center;
   background-size: 16px 16px;
   background-repeat: no-repeat;
-  background-image: url(static/img/succesicon.svg);
+  background-image: url("./static/orderform/img/succesicon.svg");
 
   /* animation: shake .125s 2 backwards; */
 }

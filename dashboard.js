@@ -35,16 +35,23 @@ function builder(orderData) {
     console.log("Return return");
     return;
   }
+
+  //Get new orders, and count beers
   let orderDataObject = getOrders(orderData);
 
   if (orderDataObject.everyNewOrder !== undefined) {
     countBeer(orderDataObject.everyNewOrder);
     console.log("We are in!");
   }
-  updateUIQueue(orderDataObject.newQueueOrders);
+
+  // Update UI
+  if (orderDataObject.newQueueOrders.length > 0) {
+    updateUIQueue(orderDataObject.newQueueOrders);
+  }
+  const amountRemoveFromQueue = settings.queue - orderData.queue.length + orderDataObject.newQueueOrders.length;
   if (settings.queue === -1) {
     console.log("! -1 init val");
-  } else {
+  } else if (amountRemoveFromQueue > 0) {
     removeFromUIQueue(settings.queue - orderData.queue.length + orderDataObject.newQueueOrders.length);
   }
 
@@ -150,9 +157,11 @@ function rankBeer() {
     //check for identical neighbors, because two same beers will always have the same amount of sales
     //remove identical
     if (ele[1] === prev) {
+      prev = ele[1];
       beerArray.splice(index, 1);
+    } else {
+      prev = ele[1];
     }
-    prev = ele[1];
   });
   updateUIRank(beerArray);
 }
@@ -177,16 +186,92 @@ function updateUIQueue(newQueueOrders) {
   if (newQueueOrders !== undefined) {
     if (newQueueOrders.length > 0) {
       console.log("new orders in queue: ", newQueueOrders);
+      newQueueOrders.forEach((order) => {
+        createUIOrder(order);
+      });
     }
   }
 }
 
+function createUIOrder(order) {
+  const templatePointer = document.querySelector("#orderTemplate");
+  let clone = templatePointer.content.cloneNode(true);
+
+  const list = document.querySelector("#blackboard_list");
+  console.log(order);
+  order.order.forEach((beer) => {
+    let beerImg = document.createElement("img");
+    beerImg.src = "./dashboard/img/beericon.png";
+    clone.querySelector("article").appendChild(beerImg);
+  });
+
+  clone.querySelector("span").textContent = order.id;
+  //set animations
+  clone.querySelector("article").classList.add("insert");
+  clone.querySelector("article").addEventListener("animationend", removeInsertAni);
+  //clone.querySelector("article").addEventListener("animationend", removeAni);
+
+  list.appendChild(clone);
+}
+
+function removeInsertAni() {
+  this.classList.remove("insert");
+}
+
 function removeFromUIQueue(number) {
   console.log("remove from queue: ", number);
+  let orders = document.querySelectorAll("#blackboard article");
+  for (let i = 0; i < number; i++) {
+    orders[i].classList.add("remove");
+    setTimeout(deleteOrder, 1495);
+
+    //deleteOrder();
+  }
+  setTimeout(function () {
+    moveQueueUp(number);
+  }, 995);
+}
+
+function deleteOrder() {
+  document.querySelector("#blackboard article").remove();
+}
+
+function moveQueueUp(number) {
+  let queueToMove = document.querySelectorAll("#blackboard article:not([remove])");
+  console.log(queueToMove);
+  const root = document.documentElement;
+  root.style.setProperty("--moveup-number", number);
+  console.log(root.style.getPropertyValue("--moveup-number"));
+  queueToMove.forEach((ele, index) => {
+    if (index >= number) {
+      ele.classList.add("moveup");
+    }
+  });
+  queueToMove[queueToMove.length - 1].addEventListener("animationend", removeMoveUp);
+}
+
+function removeMoveUp() {
+  let queueToMove = document.querySelectorAll("#blackboard article:not([remove])");
+  queueToMove.forEach((ele) => {
+    ele.classList.remove("moveup");
+  });
 }
 
 function updateUIRank(beerArray) {
   console.log(beerArray);
+  const rankImgs = document.querySelectorAll("#ranking img");
+  rankImgs.forEach((img, index) => {
+    beerArray[index][1] = beerArray[index][1].toLowerCase();
+    console.log("beerArray[index]: ", beerArray[index][1]);
+    let words = beerArray[index][1].split(" ");
+    words = words.join("");
+    console.log(words);
+    if (index < 3) {
+      img.src = `./dashboard/img/beerimages/${words}.png`;
+    } else if (index > beerArray.length - 4) {
+      img.src = `./dashboard/img/beerimages/${words}.png`;
+    }
+  });
 }
 
 /* function setLogData() {

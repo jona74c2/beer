@@ -10,7 +10,8 @@
   "dependencies": {
     "@babel/runtime": "^7.9.6",
     "card-validator": "^6.2.0",
-    "imask": "^6.0.3"
+    "imask": "^6.0.3",
+    "parcel-plugin-static-files-copy": "^2.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
