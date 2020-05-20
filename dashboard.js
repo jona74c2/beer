@@ -152,23 +152,29 @@ function rankBeer() {
   //sort the array in order of most sold beers
   beerArray = beerArray.sort(compare);
   let prev;
-  beerArray.forEach((ele, index) => {
-    //remove dublicates - needed because of risk of one beer on multiple taps blocking out another
-    //check for identical neighbors, because two same beers will always have the same amount of sales
-    //remove identical
-    if (ele[1] === prev) {
-      prev = ele[1];
-      beerArray.splice(index, 1);
+  //remove dublicates - needed because of risk of one beer on multiple taps blocking out another
+  //check for identical neighbors, because two same beers will always have the same amount of sales
+  //remove identical
+  for (let i = 0; i < beerArray.length; i++) {
+    if (beerArray[i][1] === prev) {
+      console.log("match between: ", beerArray[i][1], prev);
+      prev = beerArray[i - 1][1];
+
+      beerArray.splice(i, 1);
+      i--;
     } else {
-      prev = ele[1];
+      console.log("not a match between: ", beerArray[i][1], prev);
+      prev = beerArray[i][1];
     }
-  });
+  }
   updateUIRank(beerArray);
 }
 
 function compare(a, b) {
   if (a[0] > b[0]) return -1;
   if (b[0] > a[0]) return 1;
+  else if (a[1] > b[1]) return -1;
+  else if (b[1] > a[1]) return 1;
   return 0;
 }
 
@@ -238,10 +244,8 @@ function deleteOrder() {
 
 function moveQueueUp(number) {
   let queueToMove = document.querySelectorAll("#blackboard article:not([remove])");
-  console.log(queueToMove);
   const root = document.documentElement;
   root.style.setProperty("--moveup-number", number);
-  console.log(root.style.getPropertyValue("--moveup-number"));
   queueToMove.forEach((ele, index) => {
     if (index >= number) {
       ele.classList.add("moveup");
@@ -262,13 +266,12 @@ function updateUIRank(beerArray) {
   const rankImgs = document.querySelectorAll("#ranking img");
   rankImgs.forEach((img, index) => {
     beerArray[index][1] = beerArray[index][1].toLowerCase();
-    console.log("beerArray[index]: ", beerArray[index][1]);
     let words = beerArray[index][1].split(" ");
     words = words.join("");
     console.log(words);
     if (index < 3) {
       img.src = `./dashboard/img/beerimages/${words}.png`;
-    } else if (index > beerArray.length - 4) {
+    } else if (index > beerArray.length - 3) {
       img.src = `./dashboard/img/beerimages/${words}.png`;
     }
   });

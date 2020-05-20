@@ -1,5 +1,6 @@
 :root {
   --moveup-number: 1;
+  --blackboard-lineheight: 0px;
 }
 
 body {
@@ -37,9 +38,10 @@ body {
 #blackboard_line {
   width: 3px;
   background-color: white;
-  height: 600px;
+
   margin-right: 10%;
   margin-left: 5%;
+  margin-bottom: 5%;
 }
 
 #blackboard span {
