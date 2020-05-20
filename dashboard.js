@@ -9,6 +9,8 @@ function start() {
   settings.firstBuild = true;
   settings.interval = 2000;
   settings.queue = -1;
+  beerCount.prev = [];
+  beerCount.initRank = true;
   timerFunction();
 }
 
@@ -163,7 +165,7 @@ function rankBeer() {
       beerArray.splice(i, 1);
       i--;
     } else {
-      console.log("not a match between: ", beerArray[i][1], prev);
+      //console.log("not a match between: ", beerArray[i][1], prev);
       prev = beerArray[i][1];
     }
   }
@@ -263,18 +265,75 @@ function removeMoveUp() {
 
 function updateUIRank(beerArray) {
   console.log(beerArray);
+  let currentRanking = [];
   const rankImgs = document.querySelectorAll("#ranking img");
-  rankImgs.forEach((img, index) => {
+  beerArray.forEach((ele, index) => {
     beerArray[index][1] = beerArray[index][1].toLowerCase();
     let words = beerArray[index][1].split(" ");
     words = words.join("");
-    console.log(words);
+    currentRanking.push(words);
+    /*     console.log(words);
     if (index < 3) {
       img.src = `./dashboard/img/beerimages/${words}.png`;
     } else if (index > beerArray.length - 3) {
       img.src = `./dashboard/img/beerimages/${words}.png`;
+    } */
+  });
+  if (beerCount.initRank) {
+    initUIRankImg(currentRanking);
+  } else {
+    updateUIRankImg(currentRanking);
+  }
+
+  beerCount.prev = currentRanking;
+}
+
+function updateUIRankImg(currentRanking) {
+  const rankImgs = document.querySelectorAll("#ranking img");
+  if (JSON.stringify(currentRanking) === JSON.stringify(beerCount.prev)) {
+    console.log("No changes in rank this time around");
+    return;
+  } else {
+    console.log("Time to change ranking");
+    currentRanking.forEach((ele, index) => {
+      if (ele !== beerCount.prev[index] && index < 3) {
+        console.log("we are in upper if statement: ");
+        setRotateShiftAni(rankImgs[index], `./dashboard/img/beerimages/${ele}.png`);
+      } else if (ele !== beerCount.prev[index] && index > currentRanking.length - 3) {
+        console.log("we are in lower if statement: ");
+        setRotateShiftAni(rankImgs[rankImgs.length - currentRanking.length + index], `./dashboard/img/beerimages/${ele}.png`);
+      }
+    });
+  }
+}
+
+function initUIRankImg(currentRanking) {
+  const rankImgs = document.querySelectorAll("#ranking img");
+  currentRanking.forEach((ele, index) => {
+    if (index < 3) {
+      rankImgs[index].src = `./dashboard/img/beerimages/${ele}.png`;
+    } else if (index > currentRanking.length - 3) {
+      rankImgs[rankImgs.length - currentRanking.length + index].src = `./dashboard/img/beerimages/${ele}.png`;
     }
   });
+  beerCount.initRank = false;
+}
+
+function setRotateShiftAni(img, src) {
+  console.log("we are in rotateShift: ", img, src);
+  img.classList.add("rotateShift");
+  img.addEventListener("animationend", removeRotateShift);
+  setTimeout(function () {
+    setRankImg(img, src);
+  }, 150);
+}
+
+function setRankImg(img, src) {
+  img.src = src;
+}
+
+function removeRotateShift() {
+  this.classList.remove("rotateShift");
 }
 
 /* function setLogData() {
@@ -331,5 +390,4 @@ function removeDiv() {
   console.log("animationend");
   const firstDiv = document.querySelector(".remove");
   firstDiv.remove();
-}
- */
+}*/
