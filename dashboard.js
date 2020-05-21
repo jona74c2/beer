@@ -4,6 +4,7 @@ window.addEventListener("DOMContentLoaded", start);
 
 const settings = {};
 const beerCount = {};
+const bartendersPrev = {};
 
 function start() {
   initSettings();
@@ -17,6 +18,8 @@ function initSettings() {
   settings.queue = -1;
   beerCount.prev = [];
   beerCount.initRank = true;
+  bartendersPrev.working = [false, false, false];
+  bartendersPrev.order = [-1, -1, -1];
 }
 
 function initHTML() {
@@ -24,7 +27,7 @@ function initHTML() {
   const svgContainer = document.querySelector(".svg_container");
   let rect = svgContainer.getBoundingClientRect();
 
-  console.log("width; ", rect.width);
+  /* console.log("width; ", rect.width); */
   root.style.setProperty("--svg-height", rect.width - 40 + "px");
 }
 
@@ -48,7 +51,7 @@ async function timerFunction() {
 
 function builder(orderData) {
   if (orderData === undefined) {
-    console.log("Return return");
+    /* console.log("Return return"); */
     return;
   }
 
@@ -57,7 +60,7 @@ function builder(orderData) {
 
   if (orderDataObject.everyNewOrder !== undefined) {
     countBeer(orderDataObject.everyNewOrder);
-    console.log("We are in!");
+    /* console.log("We are in!"); */
   }
 
   // Update UI
@@ -66,10 +69,11 @@ function builder(orderData) {
   }
   const amountRemoveFromQueue = settings.queue - orderData.queue.length + orderDataObject.newQueueOrders.length;
   if (settings.queue === -1) {
-    console.log("! -1 init val");
+    /* console.log("! -1 init val"); */
   } else if (amountRemoveFromQueue > 0) {
     removeFromUIQueue(settings.queue - orderData.queue.length + orderDataObject.newQueueOrders.length);
   }
+  updateServing(orderData.bartenders, orderData.serving);
 
   settings.queue = orderData.queue.length;
 }
@@ -82,7 +86,7 @@ function getOrders(orderData) {
     settings.firstBuild = false;
   } else {
     orderDataObject = updateOrderData(orderData);
-    console.log("orderDataObject: ", orderDataObject.everyNewOrder);
+    /* console.log("orderDataObject: ", orderDataObject.everyNewOrder); */
   }
   return orderDataObject;
 }
@@ -93,7 +97,7 @@ function updateOrderData(orderData) {
   if (orderData.serving === undefined) {
     return { everyNewOrder, newQueueOrders };
   }
-  console.log("lastArrayItem: ", beerCount.lastArrayItem);
+  /* console.log("lastArrayItem: ", beerCount.lastArrayItem); */
   beerCount.foundLastArrayItem = false;
 
   newQueueOrders = addNewOrders(orderData.queue);
@@ -125,7 +129,7 @@ function addNewOrders(array) {
       subArray2.push(order);
     } else if (beerCount.lastArrayItem !== undefined && order.id === beerCount.lastArrayItem.id) {
       beerCount.foundLastArrayItem = true;
-      console.log("item found!", order.id, " ", beerCount.lastArrayItem.id);
+      /* console.log("item found!", order.id, " ", beerCount.lastArrayItem.id); */
     }
   });
   return subArray2;
@@ -148,7 +152,7 @@ function initBeerCount(orderData) {
 }
 
 function countBeer(orderData) {
-  console.log(orderData);
+  /* console.log(orderData); */
   // orderData
   orderData.forEach((order) => {
     order.order.forEach((beer) => {
@@ -159,7 +163,7 @@ function countBeer(orderData) {
       }
     });
   });
-  console.log(beerCount);
+  /* console.log(beerCount); */
   rankBeer();
 }
 
@@ -173,7 +177,7 @@ function rankBeer() {
   //remove identical
   for (let i = 0; i < beerArray.length; i++) {
     if (beerArray[i][1] === prev) {
-      console.log("match between: ", beerArray[i][1], prev);
+      /* console.log("match between: ", beerArray[i][1], prev); */
       prev = beerArray[i - 1][1];
 
       beerArray.splice(i, 1);
@@ -207,7 +211,7 @@ function beerCountObjectToArray() {
 function updateUIQueue(newQueueOrders) {
   if (newQueueOrders !== undefined) {
     if (newQueueOrders.length > 0) {
-      console.log("new orders in queue: ", newQueueOrders);
+      /* console.log("new orders in queue: ", newQueueOrders); */
       newQueueOrders.forEach((order) => {
         createUIOrder(order);
       });
@@ -220,7 +224,7 @@ function createUIOrder(order) {
   let clone = templatePointer.content.cloneNode(true);
 
   const list = document.querySelector("#blackboard_list");
-  console.log(order);
+  /* console.log(order); */
   order.order.forEach((beer) => {
     let beerImg = document.createElement("img");
     beerImg.src = "./dashboard/img/beericon.png";
@@ -241,7 +245,7 @@ function removeInsertAni() {
 }
 
 function removeFromUIQueue(number) {
-  console.log("remove from queue: ", number);
+  /* console.log("remove from queue: ", number); */
   let orders = document.querySelectorAll("#blackboard article");
   for (let i = 0; i < number; i++) {
     orders[i].classList.add("remove");
@@ -278,7 +282,7 @@ function removeMoveUp() {
 }
 
 function updateUIRank(beerArray) {
-  console.log(beerArray);
+  /* console.log(beerArray); */
   let currentRanking = [];
   const rankImgs = document.querySelectorAll("#ranking img");
   beerArray.forEach((ele, index) => {
@@ -305,16 +309,16 @@ function updateUIRank(beerArray) {
 function updateUIRankImg(currentRanking) {
   const rankImgs = document.querySelectorAll("#ranking img");
   if (JSON.stringify(currentRanking) === JSON.stringify(beerCount.prev)) {
-    console.log("No changes in rank this time around");
+    /* console.log("No changes in rank this time around"); */
     return;
   } else {
-    console.log("Time to change ranking");
+    /* console.log("Time to change ranking"); */
     currentRanking.forEach((ele, index) => {
       if (ele !== beerCount.prev[index] && index < 3) {
-        console.log("we are in upper if statement: ");
+        /* console.log("we are in upper if statement: "); */
         setRotateShiftAni(rankImgs[index], `./dashboard/img/beerimages/${ele}.png`);
       } else if (ele !== beerCount.prev[index] && index > currentRanking.length - 3) {
-        console.log("we are in lower if statement: ");
+        /* console.log("we are in lower if statement: "); */
         setRotateShiftAni(rankImgs[rankImgs.length - currentRanking.length + index], `./dashboard/img/beerimages/${ele}.png`);
       }
     });
@@ -334,7 +338,7 @@ function initUIRankImg(currentRanking) {
 }
 
 function setRotateShiftAni(img, src) {
-  console.log("we are in rotateShift: ", img, src);
+  /* console.log("we are in rotateShift: ", img, src); */
   img.classList.add("rotateShift");
   img.addEventListener("animationend", removeRotateShift);
   setTimeout(function () {
@@ -348,6 +352,92 @@ function setRankImg(img, src) {
 
 function removeRotateShift() {
   this.classList.remove("rotateShift");
+}
+
+function updateServing(bartenders, serving) {
+  bartendersPrev.working.forEach((working, index) => {
+    const curCustomer = bartenders[index].servingCustomer;
+    if (!working && curCustomer !== bartendersPrev.order[index]) {
+      bartendersPrev.working[index] = true;
+      bartendersPrev.order[index] = curCustomer;
+      let svg = document.querySelectorAll("svg");
+      svg[index].querySelector("[data-name='Layer 1'] > path").classList.add("dash");
+
+      svg[index].querySelector("[data-name='Layer 1'] > path").addEventListener("animationend", function () {
+        beginPourBeer(serving, curCustomer);
+      });
+    }
+  });
+}
+
+function beginPourBeer(serving, curCustomer) {
+  serving.forEach((order, index) => {
+    console.log("order: ", order.id, "current customer; ", curCustomer);
+    if (order.id === curCustomer) {
+      console.log("pour ", order.order.length, " beers matey!");
+      setPourAnimations(index, order.order.length);
+    }
+  });
+}
+
+function setPourAnimations(index, amount){
+  const mugs = document.querySelectorAll(".mug");
+  
+  mugs[index].classList.add("beerPour");
+  mugs[index].addEventListener("animationend", removePourAnimation);
+  animation-iteration-count: 2;
+}
+
+/* function setPourAnimations(index, amount) {
+
+  let i = 0;
+  while (i < amount) {
+    setTimeout(function () {
+      setPourAnimation(index, false);
+    }, 6000 * i);
+
+    i++;
+  }
+
+  setTimeout(function () {
+    removeDraftBeer(index);
+  }, 6000 * amount);
+} */
+
+function setPourAnimation(index) {
+  console.log("Is it last already? ");
+  const mugs = document.querySelectorAll(".mug");
+  mugs[index].classList.add("beerPour");
+  mugs[index].addEventListener("animationend", removePourAnimation);
+  /*   if (isLast) {
+    mugs[index].addEventListener("animationend", function () {
+      removeDraftBeer(index);
+    }); */
+}
+
+/* pourAnimationFinish(){
+
+} */
+
+function removePourAnimation() {
+  this.classList.remove("beerPour");
+}
+
+function removeDraftBeer(index) {
+  let svg = document.querySelectorAll("svg");
+  svg[index].querySelector("[data-name='Layer 1'] > path").classList.remove("dash");
+  svg[index].querySelector("[data-name='Layer 1'] > path").classList.add("unDash");
+  svg[index].querySelector("[data-name='Layer 1'] > path").addEventListener("animationend", function () {
+    bartenderOrderDone(index);
+  });
+}
+
+function bartenderOrderDone(index) {
+  let svg = document.querySelectorAll("svg");
+  svg[index].querySelector("[data-name='Layer 1'] > path").classList.remove("unDash");
+  console.log(svg[index].querySelector("[data-name='Layer 1'] > path"));
+  bartendersPrev.working[index] = false;
+  console.log(bartendersPrev.working[index]);
 }
 
 /* function setLogData() {
