@@ -356,60 +356,66 @@ function removeRotateShift() {
 
 function updateServing(bartenders, serving) {
   bartendersPrev.working.forEach((working, index) => {
-    const curCustomer = bartenders[index].servingCustomer;
-    if (!working && curCustomer !== bartendersPrev.order[index]) {
-      bartendersPrev.working[index] = true;
-      bartendersPrev.order[index] = curCustomer;
-      let svg = document.querySelectorAll("svg");
-      svg[index].querySelector("[data-name='Layer 1'] > path").classList.add("dash");
-
-      svg[index].querySelector("[data-name='Layer 1'] > path").addEventListener("animationend", function () {
+    if (bartenders[index].servingCustomer !== null) {
+      let curCustomer = bartenders[index].servingCustomer;
+      if (!working && curCustomer !== bartendersPrev.order[index]) {
+        bartendersPrev.working[index] = true;
+        bartendersPrev.order[index] = curCustomer;
+        let svg = document.querySelectorAll("svg");
+        svg[index].querySelector("[data-name='Layer 1'] > path").classList.add("dash");
+        setTimeout(function () {
+          beginPourBeer(serving, curCustomer, index);
+        }, 2000);
+        /*       svg[index].querySelector("[data-name='Layer 1'] > path").addEventListener("animationend", function () {
         beginPourBeer(serving, curCustomer);
-      });
+      }); */
+      }
     }
   });
 }
 
-function beginPourBeer(serving, curCustomer) {
+function beginPourBeer(serving, curCustomer, bartender) {
   serving.forEach((order, index) => {
     console.log("order: ", order.id, "current customer; ", curCustomer);
     if (order.id === curCustomer) {
       console.log("pour ", order.order.length, " beers matey!");
-      setPourAnimations(index, order.order.length);
+      setPourAnimations(index, order.order.length, bartender);
     }
   });
 }
 
-function setPourAnimations(index, amount){
+/* function setPourAnimations(index, amount) {
   const mugs = document.querySelectorAll(".mug");
-  
+
+  const root = document.documentElement;
+  root.style.setProperty("--pour-ani-count", amount);
+
   mugs[index].classList.add("beerPour");
   mugs[index].addEventListener("animationend", removePourAnimation);
-  animation-iteration-count: 2;
-}
+  removeDraftBeer(index);
+} */
 
-/* function setPourAnimations(index, amount) {
-
+function setPourAnimations(index, amount, bartender) {
   let i = 0;
   while (i < amount) {
     setTimeout(function () {
-      setPourAnimation(index, false);
+      setPourAnimation(bartender);
     }, 6000 * i);
 
     i++;
   }
 
   setTimeout(function () {
-    removeDraftBeer(index);
+    removeDraftBeer(bartender);
   }, 6000 * amount);
-} */
+}
 
 function setPourAnimation(index) {
   console.log("Is it last already? ");
   const mugs = document.querySelectorAll(".mug");
   mugs[index].classList.add("beerPour");
   mugs[index].addEventListener("animationend", removePourAnimation);
-  /*   if (isLast) {
+  /*      if (isLast) {
     mugs[index].addEventListener("animationend", function () {
       removeDraftBeer(index);
     }); */
@@ -424,18 +430,21 @@ function removePourAnimation() {
 }
 
 function removeDraftBeer(index) {
+  console.log("Is it last already? ");
   let svg = document.querySelectorAll("svg");
   svg[index].querySelector("[data-name='Layer 1'] > path").classList.remove("dash");
   svg[index].querySelector("[data-name='Layer 1'] > path").classList.add("unDash");
-  svg[index].querySelector("[data-name='Layer 1'] > path").addEventListener("animationend", function () {
+  setTimeout(function () {
     bartenderOrderDone(index);
-  });
+  }, 2000);
+  /*   svg[index].querySelector("[data-name='Layer 1'] > path").addEventListener("animationend", function () {
+    bartenderOrderDone(index);
+  }); */
 }
 
 function bartenderOrderDone(index) {
   let svg = document.querySelectorAll("svg");
   svg[index].querySelector("[data-name='Layer 1'] > path").classList.remove("unDash");
-  console.log(svg[index].querySelector("[data-name='Layer 1'] > path"));
   bartendersPrev.working[index] = false;
   console.log(bartendersPrev.working[index]);
 }

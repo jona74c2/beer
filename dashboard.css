@@ -3,6 +3,7 @@
   --blackboard-lineheight: 0px;
   --main-bg-color: black;
   --text-color: white;
+  --pour-ani-count: 1;
 }
 
 body {
@@ -166,6 +167,7 @@ svg {
 
 .beerPour {
   animation: beerPour 5s linear forwards;
+  /*  animation-iteration-count: var(--pour-ani-count); */
 }
 
 /* to create the waterlike animation i have used this toturial https://www.youtube.com/watch?v=fKdsaWrrjNM */
@@ -251,7 +253,6 @@ svg {
 
 .unDash {
   animation: unDash 2s linear forwards;
-  stroke-dashoffset: 0;
 }
 
 @keyframes unDash {
