@@ -6,12 +6,26 @@ const settings = {};
 const beerCount = {};
 
 function start() {
+  initSettings();
+  initHTML();
+  timerFunction();
+}
+
+function initSettings() {
   settings.firstBuild = true;
   settings.interval = 2000;
   settings.queue = -1;
   beerCount.prev = [];
   beerCount.initRank = true;
-  timerFunction();
+}
+
+function initHTML() {
+  const root = document.documentElement;
+  const svgContainer = document.querySelector(".svg_container");
+  let rect = svgContainer.getBoundingClientRect();
+
+  console.log("width; ", rect.width);
+  root.style.setProperty("--svg-height", rect.width - 40 + "px");
 }
 
 async function getData() {

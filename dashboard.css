@@ -53,8 +53,13 @@ header h3 {
 
 #grid_container {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-areas: "a b c";
+  /* grid-template-columns: 2fr 1fr 1fr; */
   margin: 0 5%;
+}
+
+#ranking {
+  grid-area: a;
 }
 
 #ranking img {
@@ -62,6 +67,8 @@ header h3 {
 }
 
 #blackboard {
+  margin-right: 10%;
+  grid-area: b;
   border-radius: 50px;
   overflow: hidden;
   display: flex;
@@ -90,13 +97,79 @@ header h3 {
 }
 
 #blackboard span {
-  font-size: 26px;
+  font-size: 32px;
   color: white;
   margin-right: 20px;
 }
 
+#serving {
+  grid-area: c;
+}
+
+#svg_flex {
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+}
+
+.svg_container {
+  border-radius: 50%;
+  padding: 20px;
+  background: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+  height: var(--svg-height);
+}
+
+/* to create the waterlike animation i have used this toturial https://www.youtube.com/watch?v=fKdsaWrrjNM */
+.mug {
+  border: 4px solid black;
+  border-top: none;
+
+  height: 5%;
+  width: 1.6%;
+  position: absolute;
+  z-index: 3;
+  /* transform: translate(100%, 40%); */
+  background-image: url("./static/dashboard/img/waterAni.svg");
+  background-repeat: repeat-x;
+  background-size: cover;
+  animation: beerPour 4s linear forwards;
+}
 svg {
-  width: 50%;
+  background: none;
+}
+
+.serving_number {
+  color: var(--main-bg-color);
+  margin: 0;
+  font-size: 32px;
+}
+
+.serving_beer {
+  width: 70%;
+}
+/* to create the waterlike animation i have used this toturial https://www.youtube.com/watch?v=fKdsaWrrjNM */
+@keyframes beerPour {
+  0% {
+    background-position: 0 80px;
+  }
+
+  60% {
+    background-position: 400px 0px;
+  }
+  80% {
+    background-position: 500px 0px;
+    opacity: 1;
+  }
+  100% {
+    background-position: 550px 0px;
+    opacity: 0;
+  }
 }
 
 .insert {
@@ -139,6 +212,10 @@ svg {
 }
 
 [data-name="Layer 1"] > path {
+  fill: #fff;
+  stroke: #000;
+  stroke-miterlimit: 10;
+  stroke-width: 6px;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   animation: dash 2s linear alternate forwards;
@@ -186,6 +263,35 @@ svg {
 }
 
 */
+
+@media only screen and (max-width: 1500px) {
+  #grid_container {
+    display: grid;
+    grid-template-columns: unset;
+    grid-template-areas: "a a" "b c";
+
+    margin: 0 5%;
+  }
+  .mug {
+    height: 8%;
+    width: 4%;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  #grid_container {
+    display: grid;
+    grid-template-areas: "a" "b" "c";
+    margin: 0 5%;
+  }
+  #blackboard {
+    margin-right: 0%;
+  }
+  .mug {
+    height: 9%;
+    width: calc(2% + 30px);
+  }
+}
 
 img {
   width: 100%;
