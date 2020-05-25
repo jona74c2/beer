@@ -248,9 +248,14 @@ function removeFromUIQueue(number) {
   /* console.log("remove from queue: ", number); */
   let orders = document.querySelectorAll("#blackboard article");
   for (let i = 0; i < number; i++) {
-    orders[i].classList.add("remove");
-    setTimeout(deleteOrder, 1495);
-
+    if (orders[i] !== undefined) {
+      orders[i].classList.add("remove");
+      setTimeout(deleteOrder, 1495);
+    } else {
+      console.log(orders[i]);
+      orders.splice(i, 1);
+      i--;
+    }
     //deleteOrder();
   }
   setTimeout(function () {
@@ -363,6 +368,7 @@ function updateServing(bartenders, serving) {
         bartendersPrev.order[index] = curCustomer;
         let svg = document.querySelectorAll("svg");
         svg[index].querySelector("[data-name='Layer 1'] > path").classList.add("dash");
+
         setTimeout(function () {
           beginPourBeer(serving, curCustomer, index);
         }, 2000);
@@ -378,6 +384,8 @@ function beginPourBeer(serving, curCustomer, bartender) {
   serving.forEach((order, index) => {
     console.log("order: ", order.id, "current customer; ", curCustomer);
     if (order.id === curCustomer) {
+      const orderNum = document.querySelectorAll(".serving_number");
+      orderNum[bartender].textContent = order.id;
       console.log("pour ", order.order.length, " beers matey!");
       setPourAnimations(index, order.order.length, bartender);
     }
@@ -447,6 +455,10 @@ function bartenderOrderDone(index) {
   svg[index].querySelector("[data-name='Layer 1'] > path").classList.remove("unDash");
   bartendersPrev.working[index] = false;
   console.log(bartendersPrev.working[index]);
+  console.log("index: ", index);
+  const orderNum = document.querySelectorAll(".serving_number");
+  //wanted to use textContent instead of innerHTML. InnerHTML is not as secure, but it can create blank spaces that is actually there so the text dont jump.
+  orderNum[index].innerHTML = "&nbsp;";
 }
 
 /* function setLogData() {

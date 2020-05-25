@@ -7,10 +7,22 @@
 }
 
 body {
-  height: 56vw;
-  margin: 0;
+  height: 54.25vw;
+
   padding: 0;
+  /* background: rgb(207,126,68); */
+  background: linear-gradient(172deg, rgba(207, 126, 68, 1) 0%, rgba(207, 126, 68, 1) 33%, rgba(45, 126, 133, 1) 67%);
+  background-size: cover;
+  background-size: 200% 100%;
+  animation: pulsebg 3s ease infinite;
+}
+
+#content {
+  margin: 1.7%;
   background: var(--main-bg-color);
+  -webkit-box-shadow: 8px 8px 4px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 8px 8px 4px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 8px 8px 4px 0px rgba(0, 0, 0, 0.75);
 }
 
 h1,
@@ -280,6 +292,18 @@ svg {
     transform: rotate(3600deg) scale(1);
   }
 }
+
+@keyframes pulsebg {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
 /* alternative 
   from {
     transform: rotate(0deg) scale(1);
@@ -299,6 +323,10 @@ svg {
 */
 
 @media only screen and (max-width: 1500px) {
+  body {
+    height: auto;
+  }
+
   #grid_container {
     display: grid;
     grid-template-columns: unset;
@@ -309,6 +337,14 @@ svg {
   .mug {
     height: 8%;
     width: 4%;
+  }
+
+  #content {
+    margin: 1.7%;
+    background: var(--main-bg-color);
+    -webkit-box-shadow: 4px 4px 2px 0px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 4px 4px 2px 0px rgba(0, 0, 0, 0.75);
+    box-shadow: 4px 4px 2px 0px rgba(0, 0, 0, 0.75);
   }
 }
 
