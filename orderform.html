@@ -8,14 +8,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Glass+Antiqua&family=Vast+Shadow&display=swap" rel="stylesheet" />
   </head>
   <body>
+    <h2>Payment</h2>
+    <template id="orderTemplate">
+      <article>
+        <img src="" alt="" />
+        <span class="beer_amount"></span>
+        <span class="beer_name"></span>
+      </article>
+    </template>
+    <section id="list"></section>
+    <section id="price_section">
+      <p id="order_total"></p>
+    </section>
+
     <section id="formsection">
       <form id="creditcardform" action="" onsubmit="return false;" autocomplete="off">
-        <h2>Betaling</h2>
         <div class="form-group">
-          <label for="cardnumber">Kortnummer</label>
+          <label for="cardnumber">Cardnumber</label>
           <!-- <span id="hint-mail">This field require at least an @-sign</span> -->
           <input id="cardnumber" name="cardnumber" type="text" placeholder="&nbsp;" inputmode="numeric" value="4571397012345678" required />
-          <span class="error" id="err-mail" aria-live="assertive">Indtast dit kortnummer</span>
+          <span class="error" id="err-mail" aria-live="assertive">Enter your credit cardnumber</span>
         </div>
 
         <div class="form-group margintop10">
@@ -23,31 +35,43 @@
           <div id="dateform-group">
             <!-- <span id="hint-mail">This field require at least an @-sign</span> -->
             <div class="datesingle-form">
-              <label for="cardmonth">Måned</label>
+              <label for="cardmonth">Month</label>
               <input id="cardmonth" name="cardmonth" min="1" max="12" type="number" placeholder="&nbsp;" required />
-              <span class="error" id="err-mail" aria-live="assertive">Indtast ud- løbsmåned</span>
+              <span class="error" id="err-mail" aria-live="assertive">Enter expiration month</span>
             </div>
             <p id="dateform-slash">/</p>
             <!-- <span id="hint-mail">This field require at least an @-sign</span> -->
             <div class="datesingle-form">
-              <label for="cardmonth">Årstal</label>
+              <label for="cardmonth">Year</label>
               <input id="cardyear" name="cardyear" max="99" type="number" placeholder="&nbsp;" required />
-              <span class="error" id="err-mail" aria-live="assertive">Indtast udløbsår</span>
+              <span class="error" id="err-mail" aria-live="assertive">Enter expiration year</span>
             </div>
 
             <div id="controlnumber_container" class="datesingle-form">
-              <label for="controlnumber">Kontrolnummer</label>
+              <label for="controlnumber">CVC code</label>
               <!-- <span id="hint-mail">This field require at least an @-sign</span> -->
               <input id="controlnumber" name="controlnumber" type="text" inputmode="numeric" pattern="[0-9]{3,}" placeholder="&nbsp;" required />
-              <span class="error" id="err-mail" aria-live="assertive">Indtast <span id="controlnumberdigits"></span> kontrolcifre</span>
+              <span class="error" id="err-mail" aria-live="assertive">Enter <span id="controlnumberdigits"></span> CVC digits</span>
             </div>
           </div>
         </div>
       </form>
       <div class="margintop20">
-        <a href="">Tilbage</a>
-        <button id="order">Bestil Fadøl</button>
+        <a href="http://beansprout.dk/kea/3.semester/eksamensprojekt/orderform/wordpress/?page_id=38">Return</a>
+        <button id="order">Order Beer</button>
       </div>
+
+      <img id="loading_img" src="static/dashboard/img/beericon.png" alt="" />
+    </section>
+    <section id="order_fail">
+      <p id="errormsg"></p>
+      <a id="goBack" href="http://beansprout.dk/kea/3.semester/eksamensprojekt/orderform/wordpress/?page_id=38">Return To Cart</a>
+    </section>
+    <section id="order_succes">
+      <p>Thank you for your order</p>
+      <p>Your ordernumber is</p>
+      <h3></h3>
+      <a href="http://beansprout.dk/kea/3.semester/eksamensprojekt/orderform/wordpress/" id="goFrontpage">Go To Frontpage</a>
     </section>
     <script src="orderform.js"></script>
   </body>

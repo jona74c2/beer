@@ -8,6 +8,8 @@
 }
 
 body {
+  width: 340px;
+  margin: 0 auto;
 }
 
 h1,
@@ -72,7 +74,7 @@ button {
   display: flex;
   flex-direction: column;
 
-  width: 70px;
+  width: 80px;
 }
 
 #dateform-slash {
@@ -84,7 +86,7 @@ button {
 }
 
 #creditcardform #controlnumber_container {
-  margin-left: 50px;
+  margin-left: 30px;
   width: 120px;
 }
 
@@ -104,7 +106,8 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 #creditcardform input:invalid:not(:placeholder-shown):not(:focus) + .error {
-  max-height: 3rem;
+  max-height: 4.5rem;
+  margin-bottom: 1px;
 }
 
 input:invalid:not(:placeholder-shown):not(:focus) {
@@ -127,6 +130,7 @@ input:valid:not(:placeholder-shown):not(:focus) {
 
 /* transition example taken from KEA slides: https://slides.com/dannievinther/styling-forms/#/16 */
 .error {
+  margin-bottom: 0px;
   color: crimson;
   max-height: 0;
   overflow: hidden;
@@ -162,9 +166,142 @@ input::-webkit-input-placeholder {
   transition: 0.2s;
 }
 
+#goBack,
+#goFrontpage {
+  margin: 0;
+  border: none;
+  cursor: pointer;
+  background-color: var(--form-main-color);
+  color: var(--bg-color);
+  padding: 12px 47px;
+  -webkit-box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.41);
+  -moz-box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.41);
+  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.41);
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+#goBack:hover,
+#goFrontpage:hover {
+  background-color: var(--form-main-color);
+  transition: 0.2s;
+}
+
 #formsection .margintop20 {
   margin-top: 20px;
 }
 #formsection .margintop10 {
   margin-top: 10px;
+}
+
+#list {
+  border-left: 3px solid var(--form-main-color);
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 300px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+#list img {
+  width: 15%;
+}
+
+.beer_amount {
+  margin: 0 16px;
+}
+
+#list article {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+#list article:last-child {
+  margin-bottom: 0px;
+}
+
+#price_section {
+  display: flex;
+  justify-content: flex-end;
+}
+
+#price_section p {
+  margin: 0;
+}
+
+#loading_img {
+  opacity: 0;
+  width: 20%;
+  margin-left: 70%;
+  margin-top: 20px;
+}
+
+#loading_img.rotate_load {
+  opacity: 1;
+}
+
+#order_succes,
+#order_fail {
+  opacity: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+#order_succes.unhide_content {
+  opacity: 1;
+}
+
+#order_succes h3 {
+  margin: 0;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+#order_succes p {
+  margin-top: 10px;
+  margin-bottom: 6px;
+}
+
+.rotate_load {
+  animation: rotate_load 1.2s cubic-bezier(0.75, 0, 0.32, 0.99) infinite;
+}
+
+@keyframes rotate_load {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.hide_content {
+  animation: hide 0.75s ease-in forwards;
+}
+
+@keyframes hide {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.unhide_content {
+  animation: unhide 0.75s ease-in forwards;
+}
+
+@keyframes unhide {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

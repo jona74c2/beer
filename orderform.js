@@ -9,17 +9,76 @@ const HTML = {};
 
 function start() {
   //document.querySelector("#order").addEventListener("click", cardnumberValidate);
-  getUrlParams();
+
   initObejcts();
+  setBeersOrdered();
   initForm();
 
   //timerFunction();
   //post();
 }
 
+function initObejcts() {
+  initSettings();
+  initHTMLpointers();
+}
+
+function initForm() {
+  initMasks();
+  cardnumberValidate();
+  getDate();
+  initDateForm();
+  initEventlisteners();
+}
+
+function initSettings() {
+  settings.endpointOrder = "https://holbech-bestbrewer.herokuapp.com/order/";
+  settings.endpoint = "https://holbech-bestbrewer.herokuapp.com/";
+  settings.interval = 2000;
+  settings.cardnumberMaskBool = true;
+  settings.beerRate = 50;
+}
+
+function initHTMLpointers() {
+  HTML.form = document.querySelector("form");
+}
+
+function setBeersOrdered() {
+  const order = getUrlParams();
+  if (order !== undefined) {
+    let price = 0;
+    for (let i = 0; i < order.length; i++) {
+      //modolus is added to prevent an i+2 infinite loop
+      if (i % 2 === 0) {
+        createUIOrder(order[i], order[i + 1]);
+        console.log(settings.beerRate);
+        price += Number(order[i + 1]) * settings.beerRate;
+      }
+    }
+    document.querySelector("#order_total").textContent = `${price} kr`;
+  }
+}
+
+function createUIOrder(beer, amount) {
+  const templatePointer = document.querySelector("#orderTemplate");
+  let clone = templatePointer.content.cloneNode(true);
+
+  const list = document.querySelector("#list");
+
+  clone.querySelector("img").src = "./dashboard/img/beericon.png";
+
+  clone.querySelector(".beer_amount").textContent = amount + " x ";
+  clone.querySelector(".beer_name").textContent = beer;
+
+  list.appendChild(clone);
+}
+
 function getUrlParams() {
   let params = new URL(document.location);
   params = params.toString();
+  if (params.indexOf("?") === -1) {
+    return;
+  }
   params = params.substring(params.indexOf("?") + 1, params.length);
   let paramsArray = params.split(",");
 
@@ -44,35 +103,14 @@ function removeUrlSpaces(paramsArray) {
   return updatedParamsArray;
 }
 
-function initObejcts() {
-  initSettings();
-  initHTMLpointers();
-}
-
-function initForm() {
-  initMasks();
-  cardnumberValidate();
-  getDate();
-  initDateForm();
-
-  //cardnumberMask("0000 0000 0000 0000000", [19]);
-  HTML.form.cardnumber.addEventListener("input", cardnumberValidate);
-}
-
-function initSettings() {
-  settings.endpointOrder = "https://holbech-bestbrewer.herokuapp.com/order/";
-  settings.endpoint = "https://holbech-bestbrewer.herokuapp.com/";
-  settings.interval = 2000;
-  settings.cardnumberMaskBool = true;
-}
-
-function initHTMLpointers() {
-  HTML.form = document.querySelector("form");
-}
-
 function initMasks() {
   initCodenumberMask();
   initCardnumberMask();
+}
+
+function initEventlisteners() {
+  HTML.form.cardnumber.addEventListener("input", cardnumberValidate);
+  document.querySelector("#order").addEventListener("click", paymentCardCheck);
 }
 
 function initCodenumberMask() {
@@ -85,6 +123,27 @@ function initCardnumberMask() {
   settings.maskCardnumber = IMask(HTML.form.cardnumber, {
     mask: "0000 0000 0000 0000000",
   });
+}
+
+function paymentCardCheck() {
+  console.log(HTML.form.cardnumber.validity.valid);
+  console.log(HTML.form.cardnumber);
+  const formArray = [HTML.form.cardnumber, HTML.form.cardmonth, HTML.form.cardyear, HTML.form.controlnumber];
+  if (checkCardInput(formArray)) {
+    post();
+  }
+}
+
+function checkCardInput(formArray) {
+  let bool = true;
+  formArray.forEach((input) => {
+    console.log(input);
+    if (!input.validity.valid) {
+      console.log("input invalid");
+      bool = false;
+    }
+  });
+  return bool;
 }
 
 async function getData() {
@@ -103,8 +162,11 @@ function timerFunction() {
   setTimeout(timerFunction, settings.interval);
 }
 
-/* async function post() {
-  const order = [{ name: "Hoppily Ever After", amount: 10 }];
+async function post() {
+  let order = getUrlParams();
+  order = readyParamsForPost(order);
+  setLoadIcon();
+  //const order = [{ name: "Hoppily Ever After", amount: 10 }];
   const postData = JSON.stringify(order);
   console.log(postData);
   const response = await fetch(settings.endpointOrder, {
@@ -115,35 +177,88 @@ function timerFunction() {
     body: postData,
   });
   jsonData = await response.json();
+  //stopLoadIcon();
   console.log(jsonData);
-} */
+  checkPostMessage(jsonData);
+}
+
+function readyParamsForPost(paramsArray) {
+  let returnArray = [];
+  for (let i = 0; i < paramsArray.length; i++) {
+    const returnObj = {};
+    //modolus is added to prevent an i+2 infinite loop
+    if (i % 2 === 0) {
+      returnObj.name = paramsArray[i];
+      returnObj.amount = paramsArray[i + 1];
+      returnArray.push(returnObj);
+    }
+  }
+  return returnArray;
+}
+
+function setLoadIcon() {
+  document.querySelector("#loading_img").classList.add("rotate_load");
+}
+
+function checkPostMessage(jsonData) {
+  if (jsonData.message === "added") {
+    //set form animation
+    document.querySelector("#formsection").classList.add("hide_content");
+    document.querySelector("#formsection").addEventListener("animationend", function () {
+      document.querySelector("#formsection").style.display = "none";
+      showOrderId(jsonData.status);
+    });
+  } else {
+    document.querySelector("#errormsg").textContent = jsonData.message;
+    document.querySelector("#order_fail").style.opacity = "1";
+    document.querySelector("#formsection img").classList.add("hide_content");
+  }
+}
+
+function showOrderId(orderNumber) {
+  document.querySelector("#order_succes").classList.add("unhide_content");
+
+  document.querySelector("#order_succes h3").textContent = orderNumber;
+  /* document.querySelector("#order_succes button").href = orderNumber; */
+
+  document.querySelector("#order_succes").style.opacity = "1";
+}
 
 function cardnumberValidate() {
   //API: https://www.npmjs.com/package/card-validator
-  console.log("Cardnumber Validation initiated");
-  console.log(HTML.form.cardnumber.value.length);
-  if (HTML.form.cardnumber.value.length < 4) {
-    console.log("Cardnumber Validation terminated");
+
+  const cardNumber = getCardNumber();
+  if (cardNumber === undefined) {
     return;
   }
   let valid = require("card-validator");
-  let numberValidation = valid.number(HTML.form.cardnumber.value);
-  /*  //This works on active credit cards, and i won't use my own creditcard number online :S
-   if (!numberValidation.isValid) {
-    console.log("invalid cardnumber");
-  } */
-  if (!numberValidation.isPotentiallyValid) {
-    console.log("invalid cardnumber");
-  } else {
-    if (numberValidation.card.type != null) {
-      console.log(numberValidation.card.type);
+  let numberValidation = valid.number(cardNumber);
 
-      setCardnumberMask(numberValidation.card.lengths, numberValidation.card.gaps);
-
-      setControlnumberMask(numberValidation.card.code.size);
-      console.log("numberValidation.card.code.size: ", numberValidation.card.code.size);
-    }
+  if (checkValidCard(cardNumber, numberValidation)) {
+    /* console.log(numberValidation.card.type); */
+    setCardnumberMask(numberValidation.card.lengths, numberValidation.card.gaps);
+    setControlnumberMask(numberValidation.card.code.size);
+    /* console.log("numberValidation.card.code.size: ", numberValidation.card.code.size); */
   }
+}
+
+function getCardNumber() {
+  if (HTML.form.cardnumber.value.length < 4) {
+    console.log("Cardnumber Validation terminated");
+    return;
+  } else {
+    return HTML.form.cardnumber.value;
+  }
+}
+
+function checkValidCard(cardNumber, numberValidation) {
+  /*   let valid = require("card-validator");
+  let numberValidation = valid.number(cardNumber); */
+
+  if (numberValidation.card.type != null && numberValidation.isPotentiallyValid) {
+    return true;
+  }
+  return false;
 }
 
 function setControlnumberMask(codeSize) {
