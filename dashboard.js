@@ -136,7 +136,9 @@ function addNewOrders(array) {
 }
 
 function initOrderData(orderData) {
-  let everyNewOrder = orderData.serving.concat(orderData.queue);
+  //this line add all orders to the queue, but those who are being served is not needed
+  //let everyNewOrder = orderData.serving.concat(orderData.queue);
+  let everyNewOrder = orderData.queue;
   if (orderData.queue !== undefined) {
     beerCount.lastArrayItem = orderData.queue[orderData.queue.length - 1];
   }
@@ -242,6 +244,7 @@ function createUIOrder(order) {
 
 function removeInsertAni() {
   this.classList.remove("insert");
+  this.removeEventListener("animationend", removeInsertAni);
 }
 
 function removeFromUIQueue(number) {
@@ -250,7 +253,7 @@ function removeFromUIQueue(number) {
   for (let i = 0; i < number; i++) {
     if (orders[i] !== undefined) {
       orders[i].classList.add("remove");
-      setTimeout(deleteOrder, 1495);
+      setTimeout(deleteOrder, 2300);
     } else {
       console.log(orders[i]);
       orders.splice(i, 1);
@@ -260,7 +263,7 @@ function removeFromUIQueue(number) {
   }
   setTimeout(function () {
     moveQueueUp(number);
-  }, 995);
+  }, 1795);
 }
 
 function deleteOrder() {
@@ -283,6 +286,7 @@ function removeMoveUp() {
   let queueToMove = document.querySelectorAll("#blackboard article:not([remove])");
   queueToMove.forEach((ele) => {
     ele.classList.remove("moveup");
+    ele.removeEventListener("animationend", removeMoveUp);
   });
 }
 

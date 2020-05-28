@@ -4,7 +4,7 @@
   "description": "Examproject at KEA",
   "main": "dashboard.js",
   "scripts": {
-    "start": "parcel dashboard.html --open",
+    "start": "parcel orderform.html --open",
     "build": "parcel build *.html --public-url ./"
   },
   "dependencies": {

@@ -13,8 +13,9 @@ body {
   /* background: rgb(207,126,68); */
   background: linear-gradient(172deg, rgba(207, 126, 68, 1) 0%, rgba(207, 126, 68, 1) 33%, rgba(45, 126, 133, 1) 67%);
   background-size: cover;
-  background-size: 200% 100%;
-  animation: pulsebg 3s ease infinite;
+  background-repeat: no-repeat;
+  background-size: 200% 200%;
+  animation: pulsebg 4s ease infinite;
 }
 
 #content {
@@ -23,6 +24,7 @@ body {
   -webkit-box-shadow: 8px 8px 4px 0px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 8px 8px 4px 0px rgba(0, 0, 0, 0.75);
   box-shadow: 8px 8px 4px 0px rgba(0, 0, 0, 0.75);
+  border: 3px solid var(--text-color);
 }
 
 h1,
@@ -67,7 +69,7 @@ header h3 {
 
 #grid_container {
   display: grid;
-  grid-template-areas: "a b c";
+  grid-template-areas: "a a b c";
   /* grid-template-columns: 2fr 1fr 1fr; */
   margin: 0 5%;
 }
@@ -87,6 +89,14 @@ header h3 {
 
 #ranking #rank2 {
   width: 29%;
+}
+
+#ranking #rankbottom1 {
+  width: 19%;
+}
+
+#ranking #rankbottom2 {
+  width: 19%;
 }
 
 #blackboard {
@@ -216,7 +226,7 @@ svg {
 }
 
 .remove {
-  animation: remove 1.2s cubic-bezier(0.52, -0.12, 0.93, 0.3) forwards;
+  animation: remove 1.2s cubic-bezier(0.52, -0.12, 0.93, 0.3) forwards 1s;
 }
 
 @keyframes remove {
@@ -230,13 +240,21 @@ svg {
 
 .moveup {
   animation: moveup 0.5s ease-in-out forwards;
+  transform: translateY(calc((-100% - 10px) * var(--moveup-number)));
 }
 
 @keyframes moveup {
   from {
     transform: translateX(0%);
   }
-  to {
+  /*   90% {
+    transform: translateY(calc((-100% - 10px) * var(--moveup-number)));
+  }
+  90.1% {
+    transform: translateY(calc((0%) * var(--moveup-number)));
+  } */
+  100% {
+    /* transform: translateY(calc((0%) * var(--moveup-number))); */
     transform: translateY(calc((-100% - 10px) * var(--moveup-number)));
   }
 }
@@ -295,13 +313,13 @@ svg {
 
 @keyframes pulsebg {
   0% {
-    background-position: 0% 0%;
+    background-position: 0% 10%;
   }
   50% {
-    background-position: 100% 50%;
+    background-position: 100% 40%;
   }
   100% {
-    background-position: 0% 0%;
+    background-position: 0% 10%;
   }
 }
 /* alternative 

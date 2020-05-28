@@ -9,11 +9,39 @@ const HTML = {};
 
 function start() {
   //document.querySelector("#order").addEventListener("click", cardnumberValidate);
+  getUrlParams();
   initObejcts();
   initForm();
 
   //timerFunction();
-  post();
+  //post();
+}
+
+function getUrlParams() {
+  let params = new URL(document.location);
+  params = params.toString();
+  params = params.substring(params.indexOf("?") + 1, params.length);
+  let paramsArray = params.split(",");
+
+  paramsArray = removeUrlSpaces(paramsArray);
+  console.log(paramsArray);
+  return paramsArray;
+}
+
+function removeUrlSpaces(paramsArray) {
+  let updatedParamsArray = [];
+  paramsArray.forEach((string) => {
+    updatedParamsArray.push(string);
+    if (string.includes("%20")) {
+      const indexOfSpace = string.indexOf("%20");
+      //replace %20 from url with a space
+      string = string.substring(0, indexOfSpace) + " " + string.substring(indexOfSpace + 3, string.length);
+      updatedParamsArray.pop();
+      updatedParamsArray.push(string);
+    }
+  });
+  console.log(updatedParamsArray);
+  return updatedParamsArray;
 }
 
 function initObejcts() {
@@ -75,7 +103,7 @@ function timerFunction() {
   setTimeout(timerFunction, settings.interval);
 }
 
-async function post() {
+/* async function post() {
   const order = [{ name: "Hoppily Ever After", amount: 10 }];
   const postData = JSON.stringify(order);
   console.log(postData);
@@ -83,14 +111,12 @@ async function post() {
     method: "post",
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      /* "x-apikey": settings.apiKey, */
     },
     body: postData,
   });
   jsonData = await response.json();
   console.log(jsonData);
-  /* getJsonData(); */
-}
+} */
 
 function cardnumberValidate() {
   //API: https://www.npmjs.com/package/card-validator

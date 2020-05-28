@@ -1,8 +1,44 @@
 /* https://slides.com/dannievinther/styling-forms/#/16 */
 
 :root {
-  --form-main-color: #c0dbc7;
-  --form-focus-color: #88e0a1;
+  --form-main-color: #2d7e85;
+  --form-focus-color: #cf7e44;
+  --bg-color: white;
+  --text-color: black;
+}
+
+body {
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Vast Shadow", cursive;
+  font-weight: 400;
+}
+h4,
+p,
+span,
+label,
+a,
+button {
+  font-family: "Glass Antiqua", cursive;
+}
+
+h2 {
+  font-size: 40px;
+}
+
+h3 {
+  font-size: 30px;
+}
+
+p,
+span,
+label,
+a,
+button {
+  font-size: 20px;
 }
 
 #formsection {
@@ -25,6 +61,7 @@
   -webkit-box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.41);
   -moz-box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.41);
   box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.41);
+  color: var(--bg-color);
 }
 
 #creditcardform #dateform-group {
@@ -47,8 +84,8 @@
 }
 
 #creditcardform #controlnumber_container {
-  margin-left: 70px;
-  width: 100px;
+  margin-left: 50px;
+  width: 120px;
 }
 
 label {
@@ -110,8 +147,7 @@ input::-webkit-input-placeholder {
   border: none;
   cursor: pointer;
   background-color: var(--form-focus-color);
-  font-size: 16px;
-  font-weight: 600;
+  color: var(--bg-color);
   padding: 12px 47px;
   margin-left: 50px;
   -webkit-box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.41);
@@ -121,9 +157,8 @@ input::-webkit-input-placeholder {
 }
 
 #formsection button:hover {
-  background-color: black;
-  color: var(--form-focus-color);
-  transform: translateY(-2px);
+  background-color: var(--form-main-color);
+  transform: translateY(-1px);
   transition: 0.2s;
 }
 
