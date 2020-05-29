@@ -1,13 +1,12 @@
 :root {
   --moveup-number: 1;
-  --blackboard-lineheight: 0px;
   --main-bg-color: black;
   --text-color: white;
   --pour-ani-count: 1;
 }
 
 body {
-  height: 54.25vw;
+  /* height: 54.25vw; */
 
   padding: 0;
   /* background: rgb(207,126,68); */
@@ -25,6 +24,8 @@ body {
   -moz-box-shadow: 8px 8px 4px 0px rgba(0, 0, 0, 0.75);
   box-shadow: 8px 8px 4px 0px rgba(0, 0, 0, 0.75);
   border: 3px solid var(--text-color);
+  padding-bottom: 50px;
+  /* height: 52vw; */
 }
 
 h1,
@@ -69,9 +70,15 @@ header h3 {
 
 #grid_container {
   display: grid;
+  grid-gap: 5%;
+  /* grid-template-rows: repeat(3, 1fr); */
   grid-template-areas: "a a b c";
   /* grid-template-columns: 2fr 1fr 1fr; */
   margin: 0 5%;
+}
+
+#grid_container h3 {
+  margin-left: 6%;
 }
 
 #ranking {
@@ -80,15 +87,15 @@ header h3 {
 
 #ranking img {
   width: 20%;
-  margin-right: 2%;
+  margin-right: 5%;
 }
 
 #ranking #rank1 {
-  width: 40%;
+  width: 30%;
 }
 
 #ranking #rank2 {
-  width: 29%;
+  width: 25%;
 }
 
 #ranking #rankbottom1 {
@@ -97,17 +104,17 @@ header h3 {
 
 #ranking #rankbottom2 {
   width: 19%;
+  margin-left: 6%;
 }
 
 #blackboard {
-  margin-right: 10%;
   grid-area: b;
-  border-radius: 50px;
+  /*   border-radius: 50px; */
   overflow: hidden;
   display: flex;
   flex-wrap: nowrap;
-  padding: 40px;
-  padding-top: 80px;
+  /* padding: 40px; */
+  /* padding-top: 80px; */
   background-image: url("./static/dashboard/img/blackboard.jpg");
   background-repeat: no-repeat;
   background-size: cover;
@@ -115,24 +122,34 @@ header h3 {
 }
 
 #blackboard article {
+  max-width: 80%;
   margin: 10px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 }
 
+#blackboard article img {
+  width: 90%;
+}
+
+#hidden_order {
+  opacity: 0;
+}
+
 #blackboard_line {
   width: 3px;
   background-color: white;
-
   margin-right: 10%;
   margin-left: 5%;
   margin-bottom: 5%;
+  margin-top: 5%;
 }
 
 #blackboard span {
   font-size: 32px;
   color: white;
   margin-right: 20px;
+  margin-top: 30%;
 }
 
 #serving {
@@ -148,14 +165,16 @@ header h3 {
 
 .svg_container {
   border-radius: 50%;
-  padding: 20px;
   background: var(--text-color);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 5%;
   height: var(--svg-height);
+  /*   -webkit-box-shadow: 4px 6px 0px 0px rgba(214, 214, 214, 1);
+  -moz-box-shadow: 4px 6px 0px 0px rgba(214, 214, 214, 1);
+  box-shadow: 4px 6px 0px 0px rgba(214, 214, 214, 1); */
 }
 
 /* to create the waterlike animation i have used this toturial https://www.youtube.com/watch?v=fKdsaWrrjNM */
@@ -175,6 +194,7 @@ header h3 {
 }
 svg {
   background: none;
+  /* width: 70%; */
 }
 
 .serving_number {
@@ -184,11 +204,11 @@ svg {
 }
 
 .serving_beer {
-  width: 70%;
+  width: 60%;
 }
 
 .beerPour {
-  animation: beerPour 5s linear forwards;
+  animation: beerPour 7s linear forwards;
   /*  animation-iteration-count: var(--pour-ani-count); */
 }
 
@@ -226,7 +246,7 @@ svg {
 }
 
 .remove {
-  animation: remove 1.2s cubic-bezier(0.52, -0.12, 0.93, 0.3) forwards 1s;
+  animation: remove 1.2s cubic-bezier(0.52, -0.12, 0.93, 0.3) forwards;
 }
 
 @keyframes remove {
@@ -263,7 +283,7 @@ svg {
   fill: #fff;
   stroke: #000;
   stroke-miterlimit: 10;
-  stroke-width: 6px;
+  stroke-width: 2px;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
 }
@@ -340,11 +360,44 @@ svg {
 
 */
 
-@media only screen and (max-width: 1500px) {
-  body {
-    height: auto;
-  }
+.bobble {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background-image: url("/static/dashboard/img/bobble.svg");
+  background-size: cover;
+  animation: goUp 3s ease-in 2s;
+  z-index: 4;
+  opacity: 0;
+}
 
+@keyframes goUp {
+  from {
+    opacity: 1;
+    transform: translateY(45px) translateX(0px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(20px) translateX(3px);
+  }
+}
+
+@media only screen and (max-width: 2000px) {
+  .serving_beer {
+    width: 60%;
+  }
+  .svg_container {
+    width: 220px;
+  }
+}
+
+/* @media only screen and (max-width: 2000px) {
+  .serving_beer {
+    width: 50%;
+  }
+} */
+
+@media only screen and (max-width: 1500px) {
   #grid_container {
     display: grid;
     grid-template-columns: unset;
@@ -355,6 +408,7 @@ svg {
   .mug {
     height: 8%;
     width: 4%;
+    overflow: hidden;
   }
 
   #content {
@@ -363,6 +417,14 @@ svg {
     -webkit-box-shadow: 4px 4px 2px 0px rgba(0, 0, 0, 0.75);
     -moz-box-shadow: 4px 4px 2px 0px rgba(0, 0, 0, 0.75);
     box-shadow: 4px 4px 2px 0px rgba(0, 0, 0, 0.75);
+    height: initial;
+  }
+
+  .svg_container {
+    width: 300px;
+  }
+  #content {
+    padding-bottom: 150px;
   }
 }
 
@@ -375,9 +437,19 @@ svg {
   #blackboard {
     margin-right: 0%;
   }
+  #blackboard span {
+    margin-top: 10%;
+  }
   .mug {
     height: 9%;
     width: calc(2% + 30px);
+  }
+
+  .svg_container {
+    width: 300px;
+  }
+  #content {
+    padding-bottom: 250px;
   }
 }
 

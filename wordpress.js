@@ -137,9 +137,9 @@ function setTextItem() {
   //Im having trouble creating english messages when there is also a button.
   //The text is not within a tag, so the textcontent selector overwrites all of the text, even the button. So it is danish or lose functionality
   // should ask about this
-  const addedMsg = document.querySelector(".woocommerce-message").textContent;
-  document.querySelector(".woocommerce-message").textContent = addedMsg.substring(0, addedMsg.length - 32) + "added to your cart";
-  document.querySelector(".woocommerce-message a").textContent = "View Cart";
+  //const addedMsg = document.querySelector(".woocommerce-message").textContent;
+  //document.querySelector(".woocommerce-message").textContent = addedMsg.substring(0, addedMsg.length - 32) + "added to your cart";
+  //document.querySelector(".woocommerce-message a").textContent = "View Cart";
 
   document.querySelector("#tab-title-description a").textContent = "Description";
   const text = document.querySelector("#tab-title-reviews a").textContent;

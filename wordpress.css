@@ -1,0 +1,191 @@
+/* Add your CSS code here.
+
+For example:
+.example {
+    color: red;
+}
+
+For brushing up on your CSS knowledge, check out http://www.w3schools.com/css/css_syntax.asp
+
+End of comment */
+
+@import url("https://fonts.googleapis.com/css2?family=Barrio&family=Glass+Antiqua&family=Vast+Shadow&display=swap");
+
+:root {
+  --text-color: black;
+  --bg-color: white;
+  --main-color: #2d7e85;
+  --accent-color: #f7931e;
+}
+
+#main-header {
+  background: var(--main-color);
+  /* background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;*/
+}
+
+.logo_container {
+  background-image: url("http://beansprout.dk/kea/3.semester/eksamensprojekt/orderform/wordpress/wp-content/uploads/2020/05/gradientbg3.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+#footer-bottom {
+  background: var(--main-color);
+}
+
+/*.clearfix{
+      background-image: url("http://beansprout.dk/kea/3.semester/eksamensprojekt/orderform/wordpress/wp-content/uploads/2020/05/gradientbg3.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}*/
+
+#top-menu-nav a {
+  color: var(--bg-color);
+  font-size: 24px;
+  font-weight: 400;
+}
+
+#top-menu-nav a:hover {
+  color: var(--bg-color);
+}
+
+#et-boc button {
+  color: var(--bg-color);
+}
+
+.woocommerce a.remove {
+  font-size: 50px;
+  height: 0.95em;
+  width: 0.95em;
+  color: var(--accent-color) !important;
+}
+
+.woocommerce a.remove:hover {
+  cursor: pointer;
+  background: none;
+  color: var(--accent-color) !important;
+}
+
+.product-quantity .quantity input[type="number"] {
+  background-color: var(--main-color) !important;
+  text-align: center;
+}
+
+.product-quantity .quantity input::-webkit-outer-spin-button,
+.product-quantity .quantity input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+#content-area .quantity input[type="number"] {
+  background-color: var(--main-color) !important;
+  text-align: center;
+}
+
+.quantity input::-webkit-outer-spin-button,
+.quantity input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+.woocommerce .woocommerce-message,
+.woocommerce .woocommerce-error {
+  background: var(--accent-color);
+  background: linear-gradient(-90deg, rgba(207, 126, 68, 1) 10%, rgba(45, 126, 133, 1) 60%);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.price span {
+  color: var(--text-color);
+}
+
+.product-name a {
+  color: var(--text-color);
+}
+
+/* remove a few menu items */
+
+#top-menu li:first-child,
+#top-menu .page-item-39,
+#top-menu .page-item-37 {
+  display: none;
+}
+
+/* remove wordpress theme footer default text */
+#footer-info {
+  display: none;
+}
+
+/* footer icons color */
+.et-social-icon a {
+  color: var(--accent-color);
+}
+
+/* remove breadcrumb in item */
+.woocommerce-breadcrumb,
+.product_meta {
+  display: none;
+}
+
+/*
+body{
+  color: var(--bg-color);
+}
+#top-menu-nav{
+  color: var(--bg-color);
+}*/
+
+.restore-item {
+  color: var(--bg-color);
+  text-decoration: underline;
+}
+
+.woocommerce .woocommerce-info {
+  background: var(--main-color);
+}
+
+input[name="coupon_code"],
+#main-content [name="apply_coupon"].button,
+#sidebar {
+  display: none;
+}
+
+.woocommerce-loop-product__link .woocommerce-Price-amount {
+  font-size: 18px;
+}
+
+/*
+.woocommerce-message::after {
+  content: " - Remember this";
+}*/
+
+/*label[for='comment']{
+  content: "Your review";
+}*/
+
+/* mobile css fixes */
+
+#main-header #et_mobile_nav_menu .mobile_menu_bar:before {
+  color: var(--bg-color);
+}
+
+#mobile_menu {
+  border-top: 3px solid var(--accent-color);
+}
+
+/*
+#main-content .woocommerce-message a.button .wc-forward{
+  border: 2px solid var(--bg-color) !important;
+}*/
+
+/*   font-family: 'Barrio', cursive;
+font-family: 'Glass Antiqua', cursive; */

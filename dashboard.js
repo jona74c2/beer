@@ -16,6 +16,7 @@ function initSettings() {
   settings.firstBuild = true;
   settings.interval = 2000;
   settings.queue = -1;
+  settings.draftanimationTime = 7000;
   beerCount.prev = [];
   beerCount.initRank = true;
   bartendersPrev.working = [false, false, false];
@@ -28,7 +29,7 @@ function initHTML() {
   let rect = svgContainer.getBoundingClientRect();
 
   /* console.log("width; ", rect.width); */
-  root.style.setProperty("--svg-height", rect.width - 40 + "px");
+  root.style.setProperty("--svg-height", rect.width + "px");
 }
 
 async function getData() {
@@ -227,7 +228,7 @@ function createUIOrder(order) {
 
   const list = document.querySelector("#blackboard_list");
   /* console.log(order); */
-  order.order.forEach((beer) => {
+  order.order.forEach((beer, index) => {
     let beerImg = document.createElement("img");
     beerImg.src = "./dashboard/img/beericon.png";
     clone.querySelector("article").appendChild(beerImg);
@@ -250,24 +251,28 @@ function removeInsertAni() {
 function removeFromUIQueue(number) {
   /* console.log("remove from queue: ", number); */
   let orders = document.querySelectorAll("#blackboard article");
-  for (let i = 0; i < number; i++) {
-    if (orders[i] !== undefined) {
+  for (let i = 0; i < number + 1; i++) {
+    if (orders[i] !== undefined && i !== 0) {
+      console.log("orders to remove: ", orders[i]);
       orders[i].classList.add("remove");
-      setTimeout(deleteOrder, 2300);
-    } else {
+      setTimeout(function () {
+        deleteOrder(orders[i]);
+      }, 1900);
+    } /* else {
       console.log(orders[i]);
       orders.splice(i, 1);
       i--;
-    }
+    } */
     //deleteOrder();
   }
   setTimeout(function () {
     moveQueueUp(number);
-  }, 1795);
+  }, 1400);
 }
 
-function deleteOrder() {
-  document.querySelector("#blackboard article").remove();
+function deleteOrder(order) {
+  order.remove();
+  //document.querySelector("#blackboard article").remove();
 }
 
 function moveQueueUp(number) {
@@ -275,7 +280,7 @@ function moveQueueUp(number) {
   const root = document.documentElement;
   root.style.setProperty("--moveup-number", number);
   queueToMove.forEach((ele, index) => {
-    if (index >= number) {
+    if (index >= number + 1 && index !== 0) {
       ele.classList.add("moveup");
     }
   });
@@ -412,33 +417,44 @@ function setPourAnimations(index, amount, bartender) {
   while (i < amount) {
     setTimeout(function () {
       setPourAnimation(bartender);
-    }, 6000 * i);
+    }, (settings.draftanimationTime + 1000) * i);
 
     i++;
   }
 
   setTimeout(function () {
     removeDraftBeer(bartender);
-  }, 6000 * amount);
+  }, (settings.draftanimationTime + 1000) * amount);
 }
 
 function setPourAnimation(index) {
-  console.log("Is it last already? ");
   const mugs = document.querySelectorAll(".mug");
   mugs[index].classList.add("beerPour");
-  mugs[index].addEventListener("animationend", removePourAnimation);
-  /*      if (isLast) {
-    mugs[index].addEventListener("animationend", function () {
-      removeDraftBeer(index);
-    }); */
+  setTimeout(function () {
+    removePourAnimation(mugs[index]);
+  }, settings.draftanimationTime);
+  //mugs[index].addEventListener("animationend", removePourAnimation);
+
+  for (let i = 0; i < 4; i++) {
+    let bobble = document.createElement("div");
+    bobble.classList.add("bobble");
+    bobble.style.marginLeft = Math.random() * 25 + "px";
+    bobble.style.marginBottom = Math.random() * -20 + "px";
+    bobble.style.animationDuration = Math.random() + 3 + "s";
+    bobble.style.animationDelay = Math.random() + 2 + "s";
+    //console.log("bobble: ", bobble);
+    bobble.addEventListener("animationend", removeBobble);
+    mugs[index].appendChild(bobble);
+  }
 }
 
-/* pourAnimationFinish(){
+function removePourAnimation(mug) {
+  console.log("mug: ", mug);
+  mug.classList.remove("beerPour");
+}
 
-} */
-
-function removePourAnimation() {
-  this.classList.remove("beerPour");
+function removeBobble() {
+  this.remove();
 }
 
 function removeDraftBeer(index) {
