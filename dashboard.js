@@ -251,6 +251,7 @@ function removeInsertAni() {
 function removeFromUIQueue(number) {
   /* console.log("remove from queue: ", number); */
   let orders = document.querySelectorAll("#blackboard article");
+
   for (let i = 0; i < number + 1; i++) {
     if (orders[i] !== undefined && i !== 0) {
       console.log("orders to remove: ", orders[i]);
@@ -271,7 +272,9 @@ function removeFromUIQueue(number) {
 }
 
 function deleteOrder(order) {
+  //grid.Children.RemoveAt(index);
   order.remove();
+
   //document.querySelector("#blackboard article").remove();
 }
 
@@ -328,12 +331,23 @@ function updateUIRankImg(currentRanking) {
   } else {
     /* console.log("Time to change ranking"); */
     currentRanking.forEach((ele, index) => {
+      console.log("Outside if statement, Rank img; ", rankImgs[index]);
       if (ele !== beerCount.prev[index] && index < 3) {
         /* console.log("we are in upper if statement: "); */
-        setRotateShiftAni(rankImgs[index], `./dashboard/img/beerimages/${ele}.png`);
+        //setRotateShiftAni(rankImgs[index], `./dashboard/img/beerimages/${ele}.png`);
+        console.log("Rank img; ", rankImgs[index]);
+        rankImgs[index].classList.add("hideRank");
+        rankImgs[index].addEventListener("transitionend", function () {
+          setRankImg(rankImgs[index], ele);
+        });
       } else if (ele !== beerCount.prev[index] && index > currentRanking.length - 3) {
         /* console.log("we are in lower if statement: "); */
-        setRotateShiftAni(rankImgs[rankImgs.length - currentRanking.length + index], `./dashboard/img/beerimages/${ele}.png`);
+        console.log("Rank img; ", rankImgs[rankImgs.length - currentRanking.length + index]);
+        //setRotateShiftAni(rankImgs[rankImgs.length - currentRanking.length + index], `./dashboard/img/beerimages/${ele}.png`);
+        rankImgs[rankImgs.length - currentRanking.length + index].classList.add("hideRank");
+        rankImgs[rankImgs.length - currentRanking.length + index].addEventListener("transitionend", function () {
+          setRankImg(rankImgs[rankImgs.length - currentRanking.length + index], ele);
+        });
       }
     });
   }
@@ -351,8 +365,20 @@ function initUIRankImg(currentRanking) {
   beerCount.initRank = false;
 }
 
-function setRotateShiftAni(img, src) {
-  /* console.log("we are in rotateShift: ", img, src); */
+function setRankImg(imgSlot, ele) {
+  imgSlot.src = `./dashboard/img/beerimages/${ele}.png`;
+  //this.classList.remove("hideRank");
+  setTimeout(function () {
+    removeRankHideAni(imgSlot);
+  }, 100);
+  console.log("hello tank rank  rank");
+}
+
+function removeRankHideAni(imgSlot) {
+  imgSlot.classList.remove("hideRank");
+}
+
+/* function setRotateShiftAni(img, src) {
   img.classList.add("rotateShift");
   img.addEventListener("animationend", removeRotateShift);
   setTimeout(function () {
@@ -366,7 +392,7 @@ function setRankImg(img, src) {
 
 function removeRotateShift() {
   this.classList.remove("rotateShift");
-}
+} */
 
 function updateServing(bartenders, serving) {
   bartendersPrev.working.forEach((working, index) => {

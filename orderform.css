@@ -107,7 +107,6 @@ input[type="number"]::-webkit-outer-spin-button {
 
 #creditcardform input:invalid:not(:placeholder-shown):not(:focus) + .error {
   max-height: 4.5rem;
-  margin-bottom: 1px;
 }
 
 input:invalid:not(:placeholder-shown):not(:focus) {
@@ -130,7 +129,6 @@ input:valid:not(:placeholder-shown):not(:focus) {
 
 /* transition example taken from KEA slides: https://slides.com/dannievinther/styling-forms/#/16 */
 .error {
-  margin-bottom: 0px;
   color: crimson;
   max-height: 0;
   overflow: hidden;

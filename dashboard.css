@@ -25,6 +25,10 @@ body {
   box-shadow: 8px 8px 4px 0px rgba(0, 0, 0, 0.75);
   border: 3px solid var(--text-color);
   padding-bottom: 50px;
+
+  background-image: url("./static/dashboard/img/blackboardbig.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
   /* height: 52vw; */
 }
 
@@ -88,6 +92,9 @@ header h3 {
 #ranking img {
   width: 20%;
   margin-right: 5%;
+  max-height: 600px;
+  /* object-fit: cover; */
+  transition: 0.5s ease-in max-height;
 }
 
 #ranking #rank1 {
@@ -107,17 +114,21 @@ header h3 {
   margin-left: 6%;
 }
 
+#ranking .hideRank {
+  max-height: 0;
+}
+
 #blackboard {
   grid-area: b;
-  /*   border-radius: 50px; */
+  border-radius: 20px;
   overflow: hidden;
   display: flex;
   flex-wrap: nowrap;
   /* padding: 40px; */
   /* padding-top: 80px; */
-  background-image: url("./static/dashboard/img/blackboard.jpg");
+  /* background-image: url("./static/dashboard/img/blackboard.jpg");
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: cover; */
   height: 75%;
 }
 
@@ -164,14 +175,12 @@ header h3 {
 }
 
 .svg_container {
-  border-radius: 50%;
-  background: var(--text-color);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 5%;
-  height: var(--svg-height);
+  margin-bottom: 8%;
+  /* height: var(--svg-height); */
   /*   -webkit-box-shadow: 4px 6px 0px 0px rgba(214, 214, 214, 1);
   -moz-box-shadow: 4px 6px 0px 0px rgba(214, 214, 214, 1);
   box-shadow: 4px 6px 0px 0px rgba(214, 214, 214, 1); */
@@ -179,7 +188,7 @@ header h3 {
 
 /* to create the waterlike animation i have used this toturial https://www.youtube.com/watch?v=fKdsaWrrjNM */
 .mug {
-  border: 4px solid black;
+  border: 3px solid var(--text-color);
   border-top: none;
 
   height: 5%;
@@ -198,13 +207,13 @@ svg {
 }
 
 .serving_number {
-  color: var(--main-bg-color);
+  color: var(--text-color);
   margin: 0;
   font-size: 32px;
 }
 
 .serving_beer {
-  width: 60%;
+  width: 70%;
 }
 
 .beerPour {
@@ -280,10 +289,10 @@ svg {
 }
 
 [data-name="Layer 1"] > path {
-  fill: #fff;
-  stroke: #000;
+  fill: none;
+  stroke: var(--text-color);
   stroke-miterlimit: 10;
-  stroke-width: 2px;
+  stroke-width: 4px;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
 }
@@ -314,7 +323,7 @@ svg {
   }
 }
 
-.rotateShift {
+/* .rotateShift {
   animation: rotateShift 1s cubic-bezier(0.17, 0.67, 0.05, 1.15) forwards;
 }
 
@@ -329,7 +338,7 @@ svg {
   to {
     transform: rotate(3600deg) scale(1);
   }
-}
+} */
 
 @keyframes pulsebg {
   0% {
