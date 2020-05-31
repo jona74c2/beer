@@ -14,16 +14,34 @@
         <h3>FooBar</h3>
       </header>
       <section id="grid_container">
+        <!-- ranking -->
         <section id="ranking">
           <h2>Todays Top 3</h2>
-          <img id="rank2" />
-          <img id="rank1" />
-          <img id="rank3" />
-          <h3>Todays Overlooked</h3>
-          <img id="rankbottom2" />
-          <img id="rankbottom1" />
-        </section>
+          <div id="grid_container_rank">
+            <div id="rank1_container">
+              <span>1</span>
+              <img id="rank1" />
+            </div>
+            <div id="rank2_3_container">
+              <div id="rank2_container">
+                <span>2</span>
+                <img id="rank2" />
+              </div>
 
+              <div id="rank3_container">
+                <span>3</span>
+                <img id="rank3" />
+              </div>
+            </div>
+          </div>
+          <div id="bottom_ranking_container">
+            <h3>Todays Overlooked</h3>
+            <div id="bottom_ranking_img_container">
+              <img id="rankbottom2" />
+              <img id="rankbottom1" />
+            </div>
+          </div>
+        </section>
         <template id="orderTemplate">
           <article>
             <span>Id</span>
