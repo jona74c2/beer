@@ -94,6 +94,7 @@ header h3 {
 #ranking span {
   font-family: "Vast Shadow", cursive;
   font-size: 8vw;
+  min-width: fit-content;
 }
 
 #grid_container_rank {
@@ -107,9 +108,18 @@ header h3 {
   max-width: calc(400px + 13.5%);
 }
 
+#rank1 {
+  max-height: calc(400px + 13.5%);
+  max-width: calc(400px + 13.5%);
+}
+
 #rank2_3_container {
   display: grid;
   /*   grid-gap: 5%; */
+}
+
+#rank2_container {
+  margin-bottom: 30px;
 }
 
 #rank2_container,
@@ -118,6 +128,13 @@ header h3 {
   max-height: 200px;
   max-width: 200px;
 }
+
+#rank2,
+#rank3 {
+  max-height: 200px;
+  max-width: 200px;
+}
+
 #rankbottom2,
 #rankbottom1 {
   max-height: 200px;
@@ -125,6 +142,7 @@ header h3 {
 }
 
 #bottom_ranking_container {
+  margin-top: 30px;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -148,8 +166,8 @@ h3 {
 #ranking img {
   /*   width: 20%; */
   /*   margin-right: 5%; */
-  max-height: 600px;
-  object-fit: contain;
+  /* max-height: 800px; */
+  /* object-fit: contain; */
   transition: 0.5s ease-in max-height;
 }
 
@@ -464,6 +482,33 @@ svg {
   .svg_container {
     width: 220px;
   }
+
+  #grid_container_rank {
+    grid-template-columns: 2.9fr 1fr;
+  }
+  #rank1_container {
+    max-height: calc(300px + 13.5%);
+    max-width: calc(300px + 13.5%);
+  }
+
+  #rank2_container,
+  #rank3_container,
+  #rankbottom2,
+  #rankbottom1 {
+    max-height: 150px;
+    max-width: 150px;
+  }
+
+  #ranking #rank1_container span {
+    font-size: 8vw;
+    align-self: baseline;
+    margin-top: -50px;
+  }
+
+  #ranking span {
+    font-family: "Vast Shadow", cursive;
+    font-size: 6vw;
+  }
 }
 
 @media only screen and (max-width: 1800px) {
@@ -519,12 +564,11 @@ svg {
 
   #ranking #rank1_container span {
     font-size: 20vw;
-    align-self: baseline;
-    margin-top: -50px;
+    /*     align-self: baseline;
+    margin-top: -50px; */
   }
 
   #ranking span {
-    font-family: "Vast Shadow", cursive;
     font-size: 14vw;
   }
 
