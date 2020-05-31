@@ -24,10 +24,12 @@ function initObejcts() {
 }
 
 function initForm() {
-  initMasks();
-  cardnumberValidate();
-  getDate();
-  initDateForm();
+  if (!settings.cashPay) {
+    initMasks();
+    cardnumberValidate();
+    getDate();
+    initDateForm();
+  }
   initEventlisteners();
 }
 
@@ -37,6 +39,7 @@ function initSettings() {
   settings.interval = 2000;
   settings.cardnumberMaskBool = true;
   settings.beerRate = 50;
+  settings.cashPay = false;
 }
 
 function initHTMLpointers() {
@@ -76,12 +79,18 @@ function createUIOrder(beer, amount) {
 function getUrlParams() {
   let params = new URL(document.location);
   params = params.toString();
+
   if (params.indexOf("?") === -1) {
     return;
+  } else if (params.indexOf("&cash") !== -1) {
+    params = params.substring(params.indexOf("?") + 1, params.length - 5);
+    settings.cashPay = true;
+    cashPay();
+  } else {
+    params = params.substring(params.indexOf("?") + 1, params.length);
   }
-  params = params.substring(params.indexOf("?") + 1, params.length);
-  let paramsArray = params.split(",");
 
+  let paramsArray = params.split(",");
   paramsArray = removeUrlSpaces(paramsArray);
   console.log(paramsArray);
   return paramsArray;
@@ -103,12 +112,20 @@ function removeUrlSpaces(paramsArray) {
   return updatedParamsArray;
 }
 
+function cashPay() {
+  HTML.form.style.display = "none";
+  document.querySelector("#payment").textContent = "Cash Payment";
+}
+
 function initMasks() {
   initCodenumberMask();
   initCardnumberMask();
 }
 
 function initEventlisteners() {
+  if (settings.cashPay) {
+    document.querySelector("#order").addEventListener("click", post);
+  }
   HTML.form.cardnumber.addEventListener("input", cardnumberValidate);
   document.querySelector("#order").addEventListener("click", paymentCardCheck);
 }
@@ -145,7 +162,7 @@ function checkCardInput(formArray) {
   });
   return bool;
 }
-
+/* 
 async function getData() {
   const response = await fetch(settings.endpoint, {
     method: "get",
@@ -155,12 +172,12 @@ async function getData() {
   });
   jsonData = await response.json();
   console.log(jsonData);
-}
+} */
 
-function timerFunction() {
+/* function timerFunction() {
   getData();
   setTimeout(timerFunction, settings.interval);
-}
+} */
 
 async function post() {
   let order = getUrlParams();
@@ -219,6 +236,11 @@ function showOrderId(orderNumber) {
   document.querySelector("#order_succes").classList.add("unhide_content");
 
   document.querySelector("#order_succes h3").textContent = orderNumber;
+  if (settings.cashPay) {
+    document.querySelector("#paymentDetails").textContent = "Pay when you pickup your order";
+  } else {
+    document.querySelector("#paymentDetails").textContent = "Your order is payed for";
+  }
   /* document.querySelector("#order_succes button").href = orderNumber; */
 
   document.querySelector("#order_succes").style.opacity = "1";

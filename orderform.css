@@ -264,6 +264,10 @@ input::-webkit-input-placeholder {
   margin-bottom: 6px;
 }
 
+/* #order_succes #paymentDetails{
+  dis
+} */
+
 .rotate_load {
   animation: rotate_load 1.2s cubic-bezier(0.75, 0, 0.32, 0.99) infinite;
 }

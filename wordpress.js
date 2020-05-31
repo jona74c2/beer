@@ -19,6 +19,7 @@ window.addEventListener("DOMContentLoaded", start);
 let siteUrl = "http://beansprout.dk/kea/3.semester/eksamensprojekt/orderform/wordpress/";
 let refreshBool = false;
 let beerArray = [];
+let cashButtonCreated = false;
 
 function start() {
   document.querySelector(".page-item-38 a").textContent = "Cart";
@@ -94,6 +95,7 @@ function basketBuilder() {
 
 function setTextBasket() {
   console.log("Text Basket");
+
   // text fields
   if (document.querySelector(".product-name") !== null) {
     document.querySelector(".product-name").textContent = "Beer";
@@ -108,7 +110,16 @@ function setTextBasket() {
 
     //Change text
     document.querySelector("button[name='update_cart']").textContent = "Update Cart";
-    document.querySelector(".wc-proceed-to-checkout a").textContent = "Proceed To Payment";
+
+    document.querySelector(".wc-proceed-to-checkout a").textContent = "Proceed To Pay With Card";
+
+    if (!cashButtonCreated) {
+      let payCash = document.createElement("a");
+      payCash.className = "checkout-button button alt wc-forward";
+      payCash.textContent = "Proceed To Pay With Cash";
+      document.querySelector(".wc-proceed-to-checkout").appendChild(payCash);
+      cashButtonCreated = true;
+    }
     document.querySelector(".cart_totals h2").textContent = "Shopping cart total";
   } else {
     document.querySelector("a.wc-backward").textContent = "Return To Store";
@@ -209,10 +220,14 @@ function setRestoreButton() {
 
 function setPaymentHref() {
   if (document.querySelector(".product-name") !== null) {
-    document.querySelector("a.wc-forward").href = "http://beansprout.dk/kea/3.semester/eksamensprojekt/dist/orderform.html" + "?" + beerArray.toString();
-    //let paramsString = `${siteUrl}?${beerArray.toString()}`;
-    // let searchParams = new URLSearchParams(paramsString);
-    //document.querySelector("a.wc-forward").addEventListener("click", paymentButton);
+    //document.querySelector("a.wc-forward").href = "http://beansprout.dk/kea/3.semester/eksamensprojekt/dist/orderform.html" + "?" + beerArray.toString();
+    document.querySelectorAll("a.wc-forward").forEach((button, index) => {
+      if (index === 0) {
+        button.href = "http://beansprout.dk/kea/3.semester/eksamensprojekt/dist/orderform.html" + "?" + beerArray.toString();
+      } else {
+        button.href = "http://beansprout.dk/kea/3.semester/eksamensprojekt/dist/orderform.html" + "?" + beerArray.toString() + "&" + "cash";
+      }
+    });
   }
 }
 
@@ -224,6 +239,7 @@ function paymentButton() {
 }
 
 function timeoutBasketBuilder() {
+  cashButtonCreated = false;
   setTimeout(basketBuilder, 1500);
   setTimeout(basketBuilder, 2000);
   setTimeout(basketBuilder, 2500);
