@@ -40,45 +40,6 @@ function start() {
   }
 }
 
-function getOrderBasket() {
-  beerArray = [];
-  const quantityArray = document.querySelectorAll("input[type=number]");
-
-  const beernameArray = document.querySelectorAll(".product-name a");
-
-  console.log("qArray: ", quantityArray);
-  console.log("beerArray: ", beernameArray);
-
-  quantityArray.forEach((ele) => {
-    console.log(ele.value);
-  });
-
-  beernameArray.forEach((ele, index) => {
-    console.log(ele.textContent);
-    beerArray.push(ele.textContent);
-    beerArray.push(quantityArray[index].value);
-  });
-
-  console.log(beerArray);
-}
-
-function firstNumberArray(array) {
-  let firstNumberArray = [];
-  array.forEach((ele) => {
-    firstNumberArray.push(ele.textContent.trim());
-  });
-  return firstNumberArray;
-}
-
-function trimArray(array) {
-  let trimmedArray = [];
-  array.forEach((ele) => {
-    const words = ele.textContent.trim();
-    trimmedArray.push(words[0]);
-  });
-  return trimmedArray;
-}
-
 //all these functions are nescessary to call when a button in the cart is pressed, because of an ui refresh on buttonpress in the wordpress theme
 function basketBuilder() {
   setTextBasket();
@@ -139,44 +100,26 @@ function setTextBasket() {
   //upon removing a item from the cart, the whole thing updates and eventlisteners needs to be activated again
 }
 
-//set beer item text for all beers
-function setTextItem() {
-  document.querySelector(".wc-forward").textContent = "View Cart";
-  document.querySelector(".single_add_to_cart_button").textContent = "Add To Cart";
-  document.querySelector(".related > h2").textContent = "Customers who bought this beer also bought";
+function getOrderBasket() {
+  beerArray = [];
+  const quantityArray = document.querySelectorAll("input[type=number]");
 
-  //Im having trouble creating english messages when there is also a button.
-  //The text is not within a tag, so the textcontent selector overwrites all of the text, even the button. So it is danish or lose functionality
-  // should ask about this
-  //const addedMsg = document.querySelector(".woocommerce-message").textContent;
-  //document.querySelector(".woocommerce-message").textContent = addedMsg.substring(0, addedMsg.length - 32) + "added to your cart";
-  //document.querySelector(".woocommerce-message a").textContent = "View Cart";
+  const beernameArray = document.querySelectorAll(".product-name a");
 
-  document.querySelector("#tab-title-description a").textContent = "Description";
-  const text = document.querySelector("#tab-title-reviews a").textContent;
-  document.querySelector("#tab-title-reviews a").textContent = "Reviews" + text.substring(18, text.length);
+  console.log("qArray: ", quantityArray);
+  console.log("beerArray: ", beernameArray);
 
-  document.querySelector(".woocommerce-Reviews-title").textContent = "Reviews";
+  /*   quantityArray.forEach((ele) => {
+    console.log(ele.value);
+  }); */
 
-  if (document.querySelector(".woocommerce-noreviews") !== null) {
-    document.querySelector(".woocommerce-noreviews").textContent = "Be the first to review this beer";
-    let replyTitle = document.querySelector("#reply-title").textContent;
-    document.querySelector("#reply-title").textContent = "Currently no reviews for" + replyTitle.substr(29, replyTitle.length);
-    let replyTitle2 = document.querySelector("#reply-title").textContent;
-    document.querySelector("#reply-title").textContent = replyTitle2.substring(0, replyTitle2.length - 14);
-  }
-
-  document.querySelector("label[for='rating']").textContent = "Your evaluation";
-  document.querySelector("label[for='comment']").placeholder = "Your review";
-  document.querySelector("#comment").placeholder = "Your review";
-  document.querySelector("input[name='submit']").value = "Submit your review";
-  document.querySelector(".woocommerce-Tabs-panel--description > h2").textContent = "Description";
-}
-
-function setTextFront() {
-  document.querySelectorAll("button[type='submit']").forEach((button) => {
-    button.textContent = "Add To Cart";
+  beernameArray.forEach((ele, index) => {
+    console.log(ele.textContent);
+    beerArray.push(ele.textContent);
+    beerArray.push(quantityArray[index].value);
   });
+
+  console.log(beerArray);
 }
 
 function setPrice() {
@@ -231,16 +174,73 @@ function setPaymentHref() {
   }
 }
 
-function paymentButton() {
-  /*   let paramsString = `${siteUrl}?${beerArray.toString()}`;
+/* function paymentButton() {
+ let paramsString = `${siteUrl}?${beerArray.toString()}`;
   // let searchParams = 
   new URLSearchParams(paramsString);
-  window.open("http://beansprout.dk/kea/3.semester/eksamensprojekt/dist/orderform.html", "_self"); */
-}
+  window.open("http://beansprout.dk/kea/3.semester/eksamensprojekt/dist/orderform.html", "_self");
+} */
 
 function timeoutBasketBuilder() {
   cashButtonCreated = false;
   setTimeout(basketBuilder, 1500);
   setTimeout(basketBuilder, 2000);
   setTimeout(basketBuilder, 2500);
+}
+
+/* function firstNumberArray(array) {
+  let firstNumberArray = [];
+  array.forEach((ele) => {
+    firstNumberArray.push(ele.textContent.trim());
+  });
+  return firstNumberArray;
+} */
+
+/* function trimArray(array) {
+  let trimmedArray = [];
+  array.forEach((ele) => {
+    const words = ele.textContent.trim();
+    trimmedArray.push(words[0]);
+  });
+  return trimmedArray;
+} */
+
+//set beer item text for all beers
+function setTextItem() {
+  document.querySelector(".wc-forward").textContent = "View Cart";
+  document.querySelector(".single_add_to_cart_button").textContent = "Add To Cart";
+  document.querySelector(".related > h2").textContent = "Customers who bought this beer also bought";
+
+  //Im having trouble creating english messages when there is also a button.
+  //The text is not within a tag, so the textcontent selector overwrites all of the text, even the button. So it is danish or lose functionality
+  // should ask about this
+  //const addedMsg = document.querySelector(".woocommerce-message").textContent;
+  //document.querySelector(".woocommerce-message").textContent = addedMsg.substring(0, addedMsg.length - 32) + "added to your cart";
+  //document.querySelector(".woocommerce-message a").textContent = "View Cart";
+
+  document.querySelector("#tab-title-description a").textContent = "Description";
+  const text = document.querySelector("#tab-title-reviews a").textContent;
+  document.querySelector("#tab-title-reviews a").textContent = "Reviews" + text.substring(18, text.length);
+
+  document.querySelector(".woocommerce-Reviews-title").textContent = "Reviews";
+
+  if (document.querySelector(".woocommerce-noreviews") !== null) {
+    document.querySelector(".woocommerce-noreviews").textContent = "Be the first to review this beer";
+    let replyTitle = document.querySelector("#reply-title").textContent;
+    document.querySelector("#reply-title").textContent = "Currently no reviews for" + replyTitle.substr(29, replyTitle.length);
+    let replyTitle2 = document.querySelector("#reply-title").textContent;
+    document.querySelector("#reply-title").textContent = replyTitle2.substring(0, replyTitle2.length - 14);
+  }
+
+  document.querySelector("label[for='rating']").textContent = "Your evaluation";
+  document.querySelector("label[for='comment']").placeholder = "Your review";
+  document.querySelector("#comment").placeholder = "Your review";
+  document.querySelector("input[name='submit']").value = "Submit your review";
+  document.querySelector(".woocommerce-Tabs-panel--description > h2").textContent = "Description";
+}
+
+function setTextFront() {
+  document.querySelectorAll("button[type='submit']").forEach((button) => {
+    button.textContent = "Add To Cart";
+  });
 }

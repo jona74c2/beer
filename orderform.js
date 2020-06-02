@@ -84,7 +84,6 @@ function getUrlParams() {
     return;
   } else if (params.indexOf("&cash") !== -1) {
     params = params.substring(params.indexOf("?") + 1, params.length - 5);
-    settings.cashPay = true;
     cashPay();
   } else {
     params = params.substring(params.indexOf("?") + 1, params.length);
@@ -94,6 +93,12 @@ function getUrlParams() {
   paramsArray = removeUrlSpaces(paramsArray);
   console.log(paramsArray);
   return paramsArray;
+}
+
+function cashPay() {
+  HTML.form.style.display = "none";
+  document.querySelector("#payment").textContent = "Cash Payment";
+  settings.cashPay = true;
 }
 
 function removeUrlSpaces(paramsArray) {
@@ -112,22 +117,9 @@ function removeUrlSpaces(paramsArray) {
   return updatedParamsArray;
 }
 
-function cashPay() {
-  HTML.form.style.display = "none";
-  document.querySelector("#payment").textContent = "Cash Payment";
-}
-
 function initMasks() {
   initCodenumberMask();
   initCardnumberMask();
-}
-
-function initEventlisteners() {
-  if (settings.cashPay) {
-    document.querySelector("#order").addEventListener("click", post);
-  }
-  HTML.form.cardnumber.addEventListener("input", cardnumberValidate);
-  document.querySelector("#order").addEventListener("click", paymentCardCheck);
 }
 
 function initCodenumberMask() {
@@ -140,15 +132,6 @@ function initCardnumberMask() {
   settings.maskCardnumber = IMask(HTML.form.cardnumber, {
     mask: "0000 0000 0000 0000000",
   });
-}
-
-function paymentCardCheck() {
-  console.log(HTML.form.cardnumber.validity.valid);
-  console.log(HTML.form.cardnumber);
-  const formArray = [HTML.form.cardnumber, HTML.form.cardmonth, HTML.form.cardyear, HTML.form.controlnumber];
-  if (checkCardInput(formArray)) {
-    post();
-  }
 }
 
 function checkCardInput(formArray) {
@@ -178,73 +161,6 @@ async function getData() {
   getData();
   setTimeout(timerFunction, settings.interval);
 } */
-
-async function post() {
-  let order = getUrlParams();
-  order = readyParamsForPost(order);
-  setLoadIcon();
-  //const order = [{ name: "Hoppily Ever After", amount: 10 }];
-  const postData = JSON.stringify(order);
-  console.log(postData);
-  const response = await fetch(settings.endpointOrder, {
-    method: "post",
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-    },
-    body: postData,
-  });
-  jsonData = await response.json();
-  //stopLoadIcon();
-  console.log(jsonData);
-  checkPostMessage(jsonData);
-}
-
-function readyParamsForPost(paramsArray) {
-  let returnArray = [];
-  for (let i = 0; i < paramsArray.length; i++) {
-    const returnObj = {};
-    //modolus is added to prevent an i+2 infinite loop
-    if (i % 2 === 0) {
-      returnObj.name = paramsArray[i];
-      returnObj.amount = paramsArray[i + 1];
-      returnArray.push(returnObj);
-    }
-  }
-  return returnArray;
-}
-
-function setLoadIcon() {
-  document.querySelector("#loading_img").classList.add("rotate_load");
-}
-
-function checkPostMessage(jsonData) {
-  if (jsonData.message === "added") {
-    //set form animation
-    document.querySelector("#formsection").classList.add("hide_content");
-    document.querySelector("#formsection").addEventListener("animationend", function () {
-      document.querySelector("#formsection").style.display = "none";
-      showOrderId(jsonData.status);
-    });
-  } else {
-    document.querySelector("#errormsg").textContent = jsonData.message;
-    document.querySelector("#order_fail").style.opacity = "1";
-    document.querySelector("#formsection img").classList.add("hide_content");
-  }
-}
-
-function showOrderId(orderNumber) {
-  document.querySelector("#order_succes").classList.add("unhide_content");
-
-  document.querySelector("#order_succes h3").textContent = orderNumber;
-  if (settings.cashPay) {
-    document.querySelector("#paymentDetails").textContent = "Pay when you pickup your order";
-  } else {
-    document.querySelector("#paymentDetails").textContent = "Your order is payed for";
-  }
-  /* document.querySelector("#order_succes button").href = orderNumber; */
-
-  document.querySelector("#order_succes").style.opacity = "1";
-}
 
 function cardnumberValidate() {
   //API: https://www.npmjs.com/package/card-validator
@@ -283,14 +199,6 @@ function checkValidCard(cardNumber, numberValidation) {
   return false;
 }
 
-function setControlnumberMask(codeSize) {
-  HTML.form.querySelector("#controlnumberdigits").textContent = codeSize;
-  console.log("kontrol ciffer antal: ", HTML.form.controlnumber.max);
-  HTML.form.controlnumber.pattern = `[0-9]{${codeSize}}`;
-  const nine = "0";
-  settings.maskControlnumber.updateOptions({ mask: nine.repeat(codeSize) });
-}
-
 function setCardnumberMask(lengths, gaps) {
   if (JSON.stringify(gaps) !== JSON.stringify(settings.prevGaps)) {
     const patternMask = getCardNumberPattern(lengths, gaps);
@@ -301,23 +209,6 @@ function setCardnumberMask(lengths, gaps) {
   } else {
     console.log("no update in gaps");
   }
-}
-
-function cardnumberMask(patternMask, lengths) {
-  /*  if (settings.cardnumberMaskBool) { */
-  const nine = "9";
-  const one = "1";
-  const zero = "0";
-  let max = nine.repeat(lengths[lengths.length - 1]);
-  let min = one + zero.repeat(lengths[lengths.length - 1] - 1);
-
-  HTML.form.cardnumber.minLength = lengths[0];
-
-  settings.maskCardnumber.updateOptions({ mask: patternMask, max: max }); /* else {
-    settings.mask.updateValue((mask = patternMask));
-  } */
-  /*  settings.cardnumberMaskBool = false; */
-  /* } */
 }
 
 function getCardNumberPattern(lengths, gaps) {
@@ -338,12 +229,31 @@ function getCardNumberPattern(lengths, gaps) {
   return patternMask;
 }
 
+function cardnumberMask(patternMask, lengths) {
+  /*  if (settings.cardnumberMaskBool) { */
+  const nine = "9";
+  let max = nine.repeat(lengths[lengths.length - 1]);
+  HTML.form.cardnumber.minLength = lengths[0];
+
+  settings.maskCardnumber.updateOptions({ mask: patternMask, max: max });
+}
+
+function setControlnumberMask(codeSize) {
+  HTML.form.querySelector("#controlnumberdigits").textContent = codeSize;
+  console.log("kontrol ciffer antal: ", HTML.form.controlnumber.max);
+  HTML.form.controlnumber.pattern = `[0-9]{${codeSize}}`;
+  const nine = "0";
+  settings.maskControlnumber.updateOptions({ mask: nine.repeat(codeSize) });
+}
+
 function getDate() {
   // example used to build this function: https://www.geeksforgeeks.org/how-to-convert-milliseconds-to-date-in-javascript/
   let dateInMs = new Date().getTime();
   let date = new Date(dateInMs);
-  if (date.getMonth() < 10) {
+  if (date.getMonth() < 9) {
     settings.month = "0" + (date.getMonth() + 1);
+  } else {
+    settings.month = date.getMonth() + 1;
   }
   settings.year = date.getFullYear().toString().substring(2, 4);
 }
@@ -360,6 +270,90 @@ function maksDateForm(dateForm) {
   IMask(dateForm, {
     mask: "00",
   });
+}
+
+function initEventlisteners() {
+  if (settings.cashPay) {
+    document.querySelector("#order").addEventListener("click", post);
+  }
+  HTML.form.cardnumber.addEventListener("input", cardnumberValidate);
+  document.querySelector("#order").addEventListener("click", paymentCardCheck);
+}
+
+function paymentCardCheck() {
+  console.log(HTML.form.cardnumber.validity.valid);
+  console.log(HTML.form.cardnumber);
+  const formArray = [HTML.form.cardnumber, HTML.form.cardmonth, HTML.form.cardyear, HTML.form.controlnumber];
+  if (checkCardInput(formArray)) {
+    post();
+  }
+}
+
+async function post() {
+  let order = getUrlParams();
+  order = readyParamsForPost(order);
+  setLoadIcon();
+  //const order = [{ name: "Hoppily Ever After", amount: 10 }];
+  const postData = JSON.stringify(order);
+  console.log(postData);
+  const response = await fetch(settings.endpointOrder, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+    },
+    body: postData,
+  });
+  jsonData = await response.json();
+  //stopLoadIcon();
+  console.log(jsonData);
+  checkPostMessage(jsonData);
+}
+
+function setLoadIcon() {
+  document.querySelector("#loading_img").classList.add("rotate_load");
+}
+
+function readyParamsForPost(paramsArray) {
+  let returnArray = [];
+  for (let i = 0; i < paramsArray.length; i++) {
+    const returnObj = {};
+    //modolus is added to prevent an i+2 infinite loop
+    if (i % 2 === 0) {
+      returnObj.name = paramsArray[i];
+      returnObj.amount = paramsArray[i + 1];
+      returnArray.push(returnObj);
+    }
+  }
+  return returnArray;
+}
+
+function checkPostMessage(jsonData) {
+  if (jsonData.message === "added") {
+    //set form animation
+    document.querySelector("#formsection").classList.add("hide_content");
+    document.querySelector("#formsection").addEventListener("animationend", function () {
+      document.querySelector("#formsection").style.display = "none";
+      showOrderId(jsonData.status);
+    });
+  } else {
+    document.querySelector("#errormsg").textContent = jsonData.message;
+    document.querySelector("#order_fail").style.opacity = "1";
+    document.querySelector("#formsection img").classList.add("hide_content");
+  }
+}
+
+function showOrderId(orderNumber) {
+  document.querySelector("#order_succes").classList.add("unhide_content");
+
+  document.querySelector("#order_succes h3").textContent = orderNumber;
+  if (settings.cashPay) {
+    document.querySelector("#paymentDetails").textContent = "Pay when you pickup your order";
+  } else {
+    document.querySelector("#paymentDetails").textContent = "Your order is payed for";
+  }
+  /* document.querySelector("#order_succes button").href = orderNumber; */
+
+  document.querySelector("#order_succes").style.opacity = "1";
 }
 
 /* function addCard() {

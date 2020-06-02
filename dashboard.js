@@ -8,7 +8,7 @@ const bartendersPrev = {};
 
 function start() {
   initSettings();
-  initHTML();
+  /* initHTML(); */
   timerFunction();
 }
 
@@ -23,13 +23,21 @@ function initSettings() {
   bartendersPrev.order = [-1, -1, -1];
 }
 
-function initHTML() {
+/* function initHTML() {
   const root = document.documentElement;
   const svgContainer = document.querySelector(".svg_container");
-  let rect = svgContainer.getBoundingClientRect();
+  let rect = svgContainer.getBoundingClientRect(); 
 
-  /* console.log("width; ", rect.width); */
   root.style.setProperty("--svg-height", rect.width + "px");
+} */
+
+async function timerFunction() {
+  let orderData = await getData();
+  if (Object.keys(orderData).length > 0 && orderData.constructor === Object) {
+    builder(orderData);
+  }
+
+  setTimeout(timerFunction, settings.interval);
 }
 
 async function getData() {
@@ -39,15 +47,6 @@ async function getData() {
 
   console.log(jsonData);
   return jsonData;
-}
-
-async function timerFunction() {
-  let orderData = await getData();
-  if (Object.keys(orderData).length > 0 && orderData.constructor === Object) {
-    builder(orderData);
-  }
-
-  setTimeout(timerFunction, settings.interval);
 }
 
 function builder(orderData) {
@@ -99,13 +98,13 @@ function updateOrderData(orderData) {
     return { everyNewOrder, newQueueOrders };
   }
   /* console.log("lastArrayItem: ", beerCount.lastArrayItem); */
-  beerCount.foundLastArrayItem = false;
+  beerCount.foundPrevLastOrder = false;
 
   newQueueOrders = addNewOrders(orderData.queue);
   everyNewOrder = addNewOrders(orderData.serving).concat(newQueueOrders);
-  setLastArrayItem(orderData);
+  setPrevLastOrder(orderData);
 
-  if (!beerCount.foundLastArrayItem) {
+  if (!beerCount.foundPrevLastOrder) {
     everyNewOrder = orderData.serving.concat(orderData.queue);
     newQueueOrders = orderData.queue;
     return { newQueueOrders, newQueueOrders };
@@ -113,7 +112,7 @@ function updateOrderData(orderData) {
   return { everyNewOrder, newQueueOrders };
 }
 
-function setLastArrayItem(orderData) {
+function setPrevLastOrder(orderData) {
   if (orderData.serving === undefined) {
     beerCount.lastArrayItem = -1;
     beerCount.lastArrayItem.id = -1;
@@ -126,10 +125,10 @@ function setLastArrayItem(orderData) {
 function addNewOrders(array) {
   let subArray2 = [];
   array.forEach((order) => {
-    if (beerCount.foundLastArrayItem) {
+    if (beerCount.foundPrevLastOrder) {
       subArray2.push(order);
     } else if (beerCount.lastArrayItem !== undefined && order.id === beerCount.lastArrayItem.id) {
-      beerCount.foundLastArrayItem = true;
+      beerCount.foundPrevLastOrder = true;
       /* console.log("item found!", order.id, " ", beerCount.lastArrayItem.id); */
     }
   });
@@ -460,7 +459,11 @@ function setPourAnimation(index) {
     removePourAnimation(mugs[index]);
   }, settings.draftanimationTime);
   //mugs[index].addEventListener("animationend", removePourAnimation);
+  setBobbles(index);
+}
 
+function setBobbles(index) {
+  const mugs = document.querySelectorAll(".mug");
   for (let i = 0; i < 4; i++) {
     let bobble = document.createElement("div");
     bobble.classList.add("bobble");
